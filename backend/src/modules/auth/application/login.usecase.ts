@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import {AuthRepository} from "../infrastructure/auth.repository";
+import { AuthRepository } from '../infrastructure/auth.repository';
 
 @Injectable()
 export class LoginUseCase {
@@ -25,7 +25,6 @@ export class LoginUseCase {
 
         const payload = {
             sub: user.id,
-            role: user.role,
         };
 
         return {
