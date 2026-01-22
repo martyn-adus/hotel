@@ -18,3 +18,15 @@ model User {
 
   @@map("users")
 }
+
+model RoomType {
+  id            String   @id @default(uuid())
+  type          String
+  capacity      Int
+  pricePerNight Decimal  @db.Decimal(10, 2)
+  description   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("room_types")
+}

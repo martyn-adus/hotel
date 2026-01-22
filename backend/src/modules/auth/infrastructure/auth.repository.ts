@@ -33,7 +33,6 @@ export class AuthRepository {
     return Object.assign(new User(prismaUser.id, prismaUser.createdAt), {
       _email: prismaUser.email,
       _passwordHash: prismaUser.password,
-      _role: prismaUser.role,
     });
   }
 }

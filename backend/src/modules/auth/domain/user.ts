@@ -20,5 +20,4 @@ export class User extends BaseEntity {
   get passwordHash(): string {
     return this._passwordHash;
   }
-
 }
