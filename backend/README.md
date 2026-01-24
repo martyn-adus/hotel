@@ -44,6 +44,26 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Docker
+
+Build the backend image:
+
+```bash
+$ docker build -t yourdockerhubuser/hotel-backend:latest -f backend/Dockerfile backend
+```
+
+Run with Postgres via Compose:
+
+```bash
+$ docker compose -f docker/docker-compose.yml up --build
+```
+
+Push to Docker Hub:
+
+```bash
+$ docker push yourdockerhubuser/hotel-backend:latest
+```
+
 ## Run tests
 
 ```bash
