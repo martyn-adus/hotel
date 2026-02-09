@@ -1,4 +1,13 @@
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Min,
+} from 'class-validator';
 
 export class CreateRoomTypeDto {
   @IsString()
@@ -16,4 +25,9 @@ export class CreateRoomTypeDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsArray()
+  @IsUrl({}, { each: true })
+  @IsOptional()
+  mediaUrls?: string[];
 }

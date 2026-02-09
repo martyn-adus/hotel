@@ -30,6 +30,7 @@ export class RoomTypeRepository {
     capacity: number;
     pricePerNight: number;
     description?: string;
+    mediaUrls?: string[];
   }): Promise<RoomType> {
     const roomType = await this.prisma.roomType.create({
       data: {
@@ -37,6 +38,7 @@ export class RoomTypeRepository {
         capacity: data.capacity,
         pricePerNight: data.pricePerNight,
         description: data.description,
+        mediaUrls: data.mediaUrls ?? [],
       },
     });
 
@@ -50,6 +52,7 @@ export class RoomTypeRepository {
       capacity?: number;
       pricePerNight?: number;
       description?: string;
+      mediaUrls?: string[];
     },
   ): Promise<RoomType> {
     const roomType = await this.prisma.roomType.update({
@@ -72,6 +75,7 @@ export class RoomTypeRepository {
       _capacity: prismaRoomType.capacity,
       _pricePerNight: Number(prismaRoomType.pricePerNight),
       _description: prismaRoomType.description,
+      _mediaUrls: prismaRoomType.mediaUrls ?? [],
       _updatedAt: prismaRoomType.updatedAt,
     });
   }

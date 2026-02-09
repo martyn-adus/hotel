@@ -6,6 +6,7 @@ export class RoomType extends BaseEntity {
   private _capacity: number;
   private _pricePerNight: number;
   private _description?: string;
+  private _mediaUrls: string[] = [];
   private _updatedAt: Date;
 
   constructor(id: UUID, createdAt: Date) {
@@ -26,6 +27,10 @@ export class RoomType extends BaseEntity {
 
   get description(): string | undefined {
     return this._description;
+  }
+
+  get mediaUrls(): string[] {
+    return this._mediaUrls;
   }
 
   get updatedAt(): Date {

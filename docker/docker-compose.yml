@@ -17,6 +17,20 @@ services:
       timeout: 5s
       retries: 5
 
+  minio:
+    image: minio/minio:latest
+    container_name: hotel-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
 #  backend:
 #    build:
 #      context: ../backend
@@ -26,13 +40,23 @@ services:
 #    depends_on:
 #      postgres:
 #        condition: service_healthy
+#      minio:
+#        condition: service_started
 #    environment:
 #      DATABASE_URL: "postgresql://hotel_user:hotel_pass@postgres:5432/hotel_db?schema=public"
 #      JWT_SECRET: "your-secret-key-change-this-in-production"
 #      NODE_ENV: production
+#      MINIO_ENDPOINT: "minio"
+#      MINIO_PORT: "9000"
+#      MINIO_USE_SSL: "false"
+#      MINIO_ACCESS_KEY: "minioadmin"
+#      MINIO_SECRET_KEY: "minioadmin"
+#      MINIO_BUCKET: "hotel-media"
+#      MINIO_PRESIGNED_EXPIRES: "3600"
 #    ports:
 #      - "3000:3000"
 #    command: sh -c "npx prisma migrate deploy && node dist/main"
 
 volumes:
   postgres_data:
+  minio_data:

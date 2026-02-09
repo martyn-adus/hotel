@@ -25,6 +25,7 @@ model RoomType {
   capacity      Int
   pricePerNight Decimal  @db.Decimal(10, 2)
   description   String?
+  mediaUrls     String[] @default([])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

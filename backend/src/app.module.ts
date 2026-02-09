@@ -4,9 +4,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoomModule } from './modules/room/room.module';
 import { JwtAuthGuard } from './shared/guards/jwt-auth.guard';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, RoomModule],
+  imports: [PrismaModule, AuthModule, RoomModule, FilesModule],
   controllers: [],
   providers: [
     {

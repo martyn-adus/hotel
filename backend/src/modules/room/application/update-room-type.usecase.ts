@@ -12,6 +12,7 @@ export class UpdateRoomTypeUseCase {
       capacity?: number;
       pricePerNight?: number;
       description?: string;
+      mediaUrls?: string[];
     },
   ) {
     const roomType = await this.roomTypeRepository.findById(id);

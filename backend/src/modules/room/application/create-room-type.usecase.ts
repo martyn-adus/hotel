@@ -10,6 +10,7 @@ export class CreateRoomTypeUseCase {
     capacity: number;
     pricePerNight: number;
     description?: string;
+    mediaUrls?: string[];
   }) {
     return this.roomTypeRepository.create(data);
   }
