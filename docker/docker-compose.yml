@@ -42,20 +42,13 @@ services:
 #        condition: service_healthy
 #      minio:
 #        condition: service_started
+#    env_file:
+#      - ../backend/.env.prod
 #    environment:
-#      DATABASE_URL: "postgresql://hotel_user:hotel_pass@postgres:5432/hotel_db?schema=public"
-#      JWT_SECRET: "your-secret-key-change-this-in-production"
 #      NODE_ENV: production
-#      MINIO_ENDPOINT: "minio"
-#      MINIO_PORT: "9000"
-#      MINIO_USE_SSL: "false"
-#      MINIO_ACCESS_KEY: "minioadmin"
-#      MINIO_SECRET_KEY: "minioadmin"
-#      MINIO_BUCKET: "hotel-media"
-#      MINIO_PRESIGNED_EXPIRES: "3600"
 #    ports:
 #      - "3000:3000"
-#    command: sh -c "npx prisma migrate deploy && node dist/main"
+#    command: sh -c "npx prisma migrate deploy && node dist/src/main"
 
 volumes:
   postgres_data:

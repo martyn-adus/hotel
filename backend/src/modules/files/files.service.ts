@@ -9,9 +9,10 @@ interface UploadFile {
 
 @Injectable()
 export class FilesService {
-  private readonly minioClient: MinioClient;
+  private readonly minioClient?: MinioClient;
   private readonly bucketName: string;
   private readonly presignedExpirySeconds: number;
+  private readonly minioEnabled: boolean;
 
   constructor() {
     const endpoint = process.env.MINIO_ENDPOINT ?? 'localhost';
@@ -20,22 +21,24 @@ export class FilesService {
     const accessKey = process.env.MINIO_ACCESS_KEY ?? '';
     const secretKey = process.env.MINIO_SECRET_KEY ?? '';
 
-    if (!accessKey || !secretKey) {
-      throw new BadRequestException('MinIO access key/secret key are required');
-    }
-
     this.bucketName = process.env.MINIO_BUCKET ?? 'hotel-media';
     this.presignedExpirySeconds = Number(process.env.MINIO_PRESIGNED_EXPIRES ?? 3600);
-    this.minioClient = new MinioClient({
-      endPoint: endpoint,
-      port,
-      useSSL,
-      accessKey,
-      secretKey,
-    });
+    this.minioEnabled = Boolean(accessKey && secretKey);
+    if (this.minioEnabled) {
+      this.minioClient = new MinioClient({
+        endPoint: endpoint,
+        port,
+        useSSL,
+        accessKey,
+        secretKey,
+      });
+    }
   }
 
   async upload(files?: unknown[]) {
+    if (!this.minioEnabled || !this.minioClient) {
+      throw new BadRequestException('MinIO access key/secret key are required');
+    }
     if (!Array.isArray(files) || files.length === 0) {
       throw new BadRequestException('Files are required');
     }
@@ -52,6 +55,9 @@ export class FilesService {
   private async uploadOne(file?: unknown) {
     if (!this.isUploadFile(file)) {
       throw new BadRequestException('File is required');
+    }
+    if (!this.minioClient) {
+      throw new BadRequestException('MinIO access key/secret key are required');
     }
 
     const filename = file.originalname || `upload-${randomUUID()}`;
