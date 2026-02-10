@@ -1,0 +1,617 @@
+/* =========================================================
+   Luxury Resort Admin (warm / premium / airy)
+   ========================================================= */
+
+:host {
+  --gold-1: #d7c19b;
+  --gold-2: #b99663;
+
+  --cream-1: #fbf7f0;
+  --cream-2: #f3ede3;
+  --cream-3: #e9dfd2;
+
+  --ink-1: #1b1b18;
+  --ink-2: rgba(27, 27, 24, 0.72);
+  --ink-3: rgba(27, 27, 24, 0.55);
+
+  --shadow-1: 0 22px 60px rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 30px 90px rgba(0, 0, 0, 0.35);
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+/* =========================
+   Page header
+   ========================= */
+
+.page { color: #fff; }
+
+.top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.h1{
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:-.2px;
+}
+
+.h2{
+  color:rgba(255,255,255,.72);
+  margin-top:6px;
+  font-size:13px;
+  max-width:60ch;
+}
+
+/* =========================
+   Add button (warm premium)
+   ========================= */
+
+.btn-add{
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+
+  padding:12px 22px;
+  border-radius:18px;
+
+  font-weight:900;
+  letter-spacing:.2px;
+
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #1c1b19;
+  border:0;
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.45);
+
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+:host ::ng-deep .btn-add.p-button{
+  border:0;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+}
+
+:host ::ng-deep .btn-add.p-button .p-button-icon{
+  line-height: 1;
+}
+
+.btn-add i{
+  display:inline-flex;
+  align-items:center;
+  margin-top: 4px;
+  justify-content:center;
+  line-height:1;
+  transform: translateY(-1px);
+}
+
+.btn-add:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+.btn-add:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+}
+
+/* =========================
+   Rooms grid / cards
+   ========================= */
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:16px;
+}
+
+.room{
+  border-radius: var(--radius-lg);
+  overflow:hidden;
+
+  /* трішки тепліше, без явної рамки */
+  background: rgba(0,0,0,.20);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-1);
+
+  display:grid;
+  grid-template-rows: 160px 1fr;
+}
+
+.thumb{ position:relative; }
+
+.badge{
+  position:absolute;
+  left:12px;
+  top:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(19, 17, 14, 0.62);
+  color:#f4eadc;
+  font-size:12px;
+  font-weight:800;
+  z-index:2;
+}
+
+.badge.hidden{ opacity:.75; }
+
+.thumbInner{
+  height:160px;
+  background-size:cover;
+  background-position:center;
+}
+
+.ph{
+  display:grid;
+  place-items:center;
+  gap:8px;
+  color:rgba(244,234,220,.9);
+  background:
+    radial-gradient(800px 300px at 40% 40%, rgba(215,193,155,.22), transparent 55%),
+    rgba(0,0,0,.18);
+}
+
+.ph i{ font-size:18px; opacity:.9; }
+.ph span{ font-size:12px; opacity:.85; }
+
+.body{
+  padding:14px 14px 16px;
+  display:grid;
+  gap:8px;
+}
+
+.titleRow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.title{ font-weight:900; font-size:16px; }
+.price{
+  color:#f4eadc;
+  font-weight:900;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.type{ color:rgba(255,255,255,.72); font-size:12px; }
+
+.desc{
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+  line-height:1.35;
+  display:-webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow:hidden;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:8px;
+}
+
+.ghost, .danger{
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex:1;
+}
+
+:host ::ng-deep .ghost.p-button{
+  background: rgba(255,255,255,.06);
+  border: 0;
+  color: rgba(244,234,220,.95);
+}
+
+:host ::ng-deep .danger.p-button{
+  background: rgba(180,60,60,.14);
+  border: 0;
+  color: rgba(255,220,220,.95);
+}
+
+/* =========================================================
+   Luxury Resort Dialog (NOT transparent, bigger, airy)
+   ========================================================= */
+
+:host ::ng-deep .room-dialog.p-dialog{
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-2);
+  border: 0; /* без рамок */
+}
+
+/* overlay трохи м’якший */
+:host ::ng-deep .p-dialog-mask{
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+}
+
+/* Header */
+:host ::ng-deep .room-dialog .p-dialog-header{
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+  background: var(--cream-1);
+  color: var(--ink-1);
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+/* Content */
+:host ::ng-deep .room-dialog .p-dialog-content{
+  background: var(--cream-2);
+  color: var(--ink-1);
+  padding: 18px 20px 20px;
+  border-bottom-left-radius: 26px;
+  border-bottom-right-radius: 26px;
+
+}
+
+/* Close icon */
+:host ::ng-deep .room-dialog .p-dialog-header-icon{
+  color: var(--ink-2);
+}
+:host ::ng-deep .room-dialog .p-dialog-header-icon:hover{
+  background: rgba(0,0,0,.06);
+}
+
+/* header block */
+.dlgHeader{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.dlgIcon{
+  width:44px;
+  height:44px;
+  border-radius: 16px;
+  display:grid;
+  place-items:center;
+
+  background: linear-gradient(135deg, rgba(215,193,155,.45), rgba(185,150,99,.25));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+}
+
+.dlgIcon i{ color: #3a2e1e; font-size:16px; }
+
+.dlgTitles{ display:grid; gap:4px; }
+.dlgTitle{ font-weight: 1000; letter-spacing: -.2px; }
+.dlgSub{ color: var(--ink-2); font-size: 12px; }
+
+/* layout */
+.dlgGrid{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+
+.dlgForm{ display:grid; gap:14px; }
+.dlgPreview{ display:grid; gap:12px; }
+
+/* fields */
+.row2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+.field {
+  display:grid;
+  gap:8px;
+
+  & input {
+    padding: 10px 12px;
+  }
+}
+
+label{
+  font-size:12px;
+  color: var(--ink-2);
+  font-weight: 800;
+}
+
+.err{
+  color: #b3261e;
+  font-size: 12px;
+}
+
+/* Prime inputs: clean, resort-like */
+:host ::ng-deep .room-dialog .p-inputtext,
+:host ::ng-deep .room-dialog .p-inputnumber-input,
+:host ::ng-deep .room-dialog textarea.p-inputtextarea{
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: var(--cream-1);
+  color: var(--ink-1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+  padding: 10px 12px;
+}
+
+:host ::ng-deep .room-dialog .p-inputtext:focus,
+:host ::ng-deep .room-dialog .p-inputnumber-input:focus,
+:host ::ng-deep .room-dialog textarea.p-inputtextarea:focus{
+  outline: none;
+  border-color: rgba(185,150,99,.55);
+  box-shadow: 0 0 0 4px rgba(215,193,155,.25);
+}
+
+/* money row */
+.money{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap:10px;
+  align-items:center;
+}
+
+.suffix{
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--cream-1);
+  border: 1px solid rgba(0,0,0,.10);
+  color: var(--ink-2);
+  font-weight: 900;
+  font-size: 12px;
+  white-space:nowrap;
+}
+
+/* Photos box (light) */
+.photosBox{
+  margin-top:2px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(0,0,0,.06);
+  padding: 12px;
+  display:grid;
+  gap:12px;
+}
+
+.photosHeader{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.phTitle{ font-weight: 1000; }
+.phHint{ font-size: 12px; color: var(--ink-3); }
+
+.addPhotoRow{ display:flex; gap:10px; }
+.addPhotoRow input{ flex:1; }
+
+.btn-mini{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  border-radius: 14px;
+}
+
+:host ::ng-deep .btn-mini.p-button{
+  border:0;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #1c1b19;
+  font-weight: 900;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+  padding: 8px 12px;
+}
+
+/* thumbnails */
+.photoGrid{ display:flex; flex-wrap:wrap; gap:10px; }
+
+.phItem{
+  width: 128px;
+  height: 86px;
+  border-radius: 16px;
+  overflow:hidden;
+  position:relative;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.phImg{
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+}
+
+.phRemove{
+  position:absolute;
+  right:8px;
+  top:8px;
+  width:28px;
+  height:28px;
+  border-radius: 12px;
+  border: 0;
+  background: rgba(0,0,0,.55);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+
+.phPrimary{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  font-size:11px;
+  font-weight: 1000;
+  color:#1c1b19;
+  background: rgba(215,193,155,.92);
+  padding: 5px 8px;
+  border-radius: 999px;
+}
+
+.phEmpty{
+  border-radius: 16px;
+  border: 1px dashed rgba(0,0,0,.18);
+  background: rgba(255,255,255,.35);
+  padding: 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+/* Preview card (should look like website card, not admin) */
+.previewCard{
+  border-radius: 22px;
+  overflow:hidden;
+  background: var(--cream-1);
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 18px 45px rgba(0,0,0,.14);
+}
+
+.previewImg{
+  height: 190px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  background-color: var(--cream-3);
+}
+
+.previewPlaceholder{
+  background:
+    radial-gradient(900px 280px at 40% 40%, rgba(215,193,155,.25), transparent 55%),
+    var(--cream-3);
+}
+
+.previewPh{
+  height:100%;
+  display:grid;
+  place-items:center;
+  gap:8px;
+  color: var(--ink-2);
+}
+
+.previewBadge{
+  position:absolute;
+  left:12px;
+  top:12px;
+  padding:6px 10px;
+  border-radius: 999px;
+  background: rgba(27,27,24,.80);
+  color: #fff;
+  font-size:12px;
+  font-weight: 900;
+}
+
+.previewBadge.dim{ opacity:.75; }
+
+.previewBody{
+  padding: 14px;
+  display:grid;
+  gap:8px;
+  color: var(--ink-1);
+}
+
+.pTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.pTitle{ font-weight: 1000; font-size: 16px; }
+.pPrice{ font-weight: 1000; white-space: nowrap; color: #3a2e1e; }
+.pType{ color: var(--ink-2); font-size: 12px; }
+
+.pDesc{
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tips (lighter, not “instruction wall”) */
+.previewTips{ display:grid; gap:10px; }
+
+.tip{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(0,0,0,.06);
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+.tip i{ color: #7a5b2a; margin-top:2px; }
+
+/* footer */
+.dlgFooter{
+  grid-column: 1 / -1;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  padding-top: 4px;
+}
+
+.btn-ghost{
+  border-radius: 14px;
+  display:inline-flex;
+  align-items:center;
+}
+
+:host ::ng-deep .btn-ghost.p-button{
+  background: transparent;
+  border: 1px solid rgba(0,0,0,.12);
+  color: var(--ink-1);
+  padding: 10px 12px;
+}
+
+.btn-save{
+  border-radius: 14px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+
+:host ::ng-deep .btn-save.p-button{
+  border:0;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color:#1c1b19;
+  font-weight: 1000;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+  padding: 10px 12px;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 1100px){
+  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px){
+  .dlgGrid{ grid-template-columns: 1fr; }
+  .row2{ grid-template-columns: 1fr; }
+  .previewImg{ height: 160px; }
+}
+
+@media (max-width: 700px){
+  .top{ align-items:flex-start; flex-direction:column; }
+  .grid{ grid-template-columns: 1fr; }
+}

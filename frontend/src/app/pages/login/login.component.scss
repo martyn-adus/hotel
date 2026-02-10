@@ -1,0 +1,382 @@
+:host {
+  --ink: #1f1f1f;           // темно-сірий
+  --ink-2: #2a2a2a;
+  --muted: #6c655b;
+
+  --beige: #efe6d8;         // бежевий
+  --beige-2: #e7dccb;
+
+  --sand: #cbb494;          // світло-коричневий
+  --sand-2: #b99974;
+
+  --card: rgba(255, 255, 255, 0.72);
+  --stroke: rgba(31, 31, 31, 0.10);
+
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.20);
+  --radius: 22px;
+
+  --premium-bg: rgba(40, 32, 24, 0.75);
+  --premium-border: rgba(203, 180, 148, 0.35);
+  --premium-text: #f3e7d6;
+
+
+  display: block;
+  color: var(--ink);
+}
+
+.login-page {
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(1200px 800px at 20% 15%, var(--beige) 0%, transparent 55%),
+  radial-gradient(900px 700px at 85% 30%, rgba(203, 180, 148, 0.55) 0%, transparent 60%),
+  linear-gradient(180deg, #151515 0%, #101010 100%);
+}
+
+.bg {
+  position: absolute;
+  inset: -60px;
+  background:
+    radial-gradient(closest-side at 28% 22%, rgba(239, 230, 216, 0.35), transparent 65%),
+    radial-gradient(closest-side at 78% 34%, rgba(203, 180, 148, 0.32), transparent 65%),
+    radial-gradient(closest-side at 55% 85%, rgba(183, 153, 116, 0.18), transparent 70%);
+  filter: blur(10px);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.shell {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 34px);
+  min-height: 100svh;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(18px, 3vw, 34px);
+  align-items: center;
+}
+
+.card {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(203, 180, 148, 0.95), rgba(239, 230, 216, 0.9));
+  border: 1px solid rgba(31, 31, 31, 0.12);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+
+  i { font-size: 20px; }
+}
+
+.titles .hotel {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  font-size: 18px;
+}
+
+.titles .subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+
+  label {
+    font-size: 13px;
+    color: rgba(31,31,31,.82);
+    font-weight: 600;
+  }
+
+  input[pInputText] {
+    width: 100%;
+    border-radius: 14px;
+    padding: 12px 12px;
+    border: 1px solid rgba(31,31,31,.14);
+    background: rgba(255,255,255,.85);
+    transition: box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(185,153,116,.55);
+      box-shadow: 0 0 0 4px rgba(185,153,116,.20);
+      transform: translateY(-1px);
+    }
+
+    &.invalid {
+      border-color: rgba(180, 60, 60, 0.55);
+      box-shadow: 0 0 0 4px rgba(180, 60, 60, 0.14);
+    }
+  }
+}
+
+.hint {
+  color: rgba(120, 20, 20, 0.78);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.error {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(180, 60, 60, 0.10);
+  border: 1px solid rgba(180, 60, 60, 0.22);
+  color: rgba(90, 10, 10, 0.88);
+
+  i { font-size: 16px; }
+  span { font-size: 13px; }
+}
+
+/* PrimeNG Password styling */
+:host ::ng-deep .pw {
+  width: 100%;
+}
+
+:host ::ng-deep .pw .p-password-input {
+  width: 100%;
+  border-radius: 14px !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(31,31,31,.14) !important;
+  background: rgba(255,255,255,.85) !important;
+  transition: box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+
+  &:focus {
+    border-color: rgba(185,153,116,.55) !important;
+    box-shadow: 0 0 0 4px rgba(185,153,116,.20) !important;
+    transform: translateY(-1px);
+  }
+
+  &.invalid {
+    border-color: rgba(180, 60, 60, 0.55) !important;
+    box-shadow: 0 0 0 4px rgba(180, 60, 60, 0.14) !important;
+  }
+}
+
+.btn {
+  width: 100%;
+  border-radius: 16px;
+  padding: 12px 14px;
+  gap: 10px;
+
+  /* PrimeNG button baseline override */
+  :host ::ng-deep &.p-button {
+    border: 0;
+    background: linear-gradient(135deg, #cbb494, #b99974);
+    color: #1b1b1b;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.18);
+    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+
+    &:hover {
+      filter: brightness(1.02);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 44px rgba(0,0,0,.22);
+    }
+
+    &:active {
+      transform: translateY(0px);
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+    &:disabled {
+      filter: grayscale(0.25);
+      opacity: 0.75;
+    }
+  }
+}
+
+.meta {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(31,31,31,.66);
+  font-size: 12px;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    background: rgba(185,153,116,.95);
+    box-shadow: 0 0 0 4px rgba(185,153,116,.20);
+  }
+}
+
+/* Right side */
+.side {
+  color: rgba(255,255,255,.86);
+}
+
+.side-inner {
+  padding: clamp(10px, 2vw, 20px);
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: rgba(40, 32, 24, 0.78);
+  border: 1px solid rgba(203, 180, 148, 0.45);
+
+  color: #f3e7d6;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 480px) {
+  .kicker {
+    background: rgba(28, 22, 18, 0.88);
+    border-color: rgba(203, 180, 148, 0.55);
+    color: #fff;
+  }
+}
+
+
+
+.headline {
+  margin: 14px 0 10px;
+  font-size: clamp(22px, 3.2vw, 34px);
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.lead {
+  margin: 0;
+  color: rgba(255,255,255,.78);
+  line-height: 1.5;
+  font-size: 14px;
+  max-width: 42ch;
+}
+
+.features {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(239,230,216,.14);
+  color: rgba(239,230,216,.90);
+  font-size: 13px;
+
+  i { font-size: 14px; }
+}
+
+/* Responsive: tablet/mobile */
+@media (max-width: 960px) {
+  .shell {
+    grid-template-columns: 1fr;
+    align-content: center;
+  }
+
+  .side {
+    order: -1;
+  }
+
+  .lead {
+    max-width: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .logo { width: 42px; height: 42px; }
+  .titles .hotel { font-size: 16px; }
+  .card { border-radius: 18px; }
+}
+
+/* PrimeNG Password: fix p-icon toggle alignment */
+:host ::ng-deep .pw .p-input-icon-right {
+  position: relative !important; /* ключове */
+}
+
+/* контейнер інпута робимо стабільним по висоті */
+:host ::ng-deep .pw .p-password-input {
+  width: 100% !important;
+  padding-right: 3rem !important;
+}
+
+/* на всякий — центруємо через transform (надійніше за margin-top) */
+:host ::ng-deep .pw .p-password-toggle-mask-icon {
+  top: 50% !important;
+  margin-top: 0 !important;
+  transform: translateY(-50%) !important;
+  inset-inline-end: 12px !important;
+}
+
+/* Desktop upscale */
+@media (min-width: 1024px) {
+  .card {
+    max-width: 520px;
+    padding: 32px 34px;
+    border-radius: 26px;
+  }
+
+  .form {
+    gap: 18px;
+  }
+
+  .btn {
+    margin-top: 6px;
+  }
+}
+
+
+

@@ -1,0 +1,241 @@
+<div class="page">
+  <header class="top">
+    <div>
+      <div class="h1">Номери готелю</div>
+      <div class="h2">Створюй, редагуй, додавай фото та керуй цінами.</div>
+    </div>
+
+    <button pButton class="btn-add" type="button" (click)="openCreate()">
+      <i class="pi pi-plus" pButtonIcon></i>
+      <span pButtonLabel>Додати номер</span>
+    </button>
+  </header>
+
+  <section class="grid">
+    @for (r of rooms(); track r.id) {
+      <article class="room">
+        <div class="thumb">
+          <div class="badge" [class.hidden]="r.status === 'HIDDEN'">
+            {{ r.status === 'ACTIVE' ? 'Активний' : 'Прихований' }}
+          </div>
+
+          @if (r.photos.length) {
+            <div class="thumbInner"
+                 [style.backgroundImage]="'url(' + r.photos[0] + ')'"></div>
+          } @else {
+            <div class="thumbInner ph">
+              <i class="pi pi-image"></i>
+              <span>Нема фото</span>
+            </div>
+          }
+        </div>
+
+        <div class="body">
+          <div class="titleRow">
+            <div class="title">{{ r.title }}</div>
+            <div class="price">{{ r.pricePerNight | number }} грн/ніч</div>
+          </div>
+
+          <div class="type">{{ r.type }}</div>
+          <div class="desc">{{ r.description }}</div>
+
+          <div class="actions">
+            <button pButton class="ghost" type="button" (click)="openEdit(r)">
+              <i class="pi pi-pencil" pButtonIcon></i>
+              <span pButtonLabel>Редагувати</span>
+            </button>
+
+            <button pButton class="danger" type="button" (click)="remove(r)">
+              <i class="pi pi-trash" pButtonIcon></i>
+              <span pButtonLabel>Видалити</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    }
+  </section>
+
+  <p-dialog
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: dialogWidth(), 'borders-radius': '12px'}"
+    [contentStyle]="{ overflow: 'auto' }"
+    [breakpoints]="{ '900px' : '94vh','600px': '94vw'}"
+    [closeOnEscape]="true"
+    class="room-dialog"
+  >
+    <ng-template pTemplate="header">
+      <div class="dlgHeader">
+        <div class="dlgIcon">
+          <i class="pi" [ngClass]="mode() === 'create' ? 'pi-plus' : 'pi-pencil'"></i>
+        </div>
+
+        <div class="dlgTitles">
+          <div class="dlgTitle">
+            {{ mode() === 'create' ? 'Новий номер' : 'Редагування номера' }}
+          </div>
+          <div class="dlgSub">
+            Заповни дані — праворуч одразу побачиш превʼю картки.
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <form class="dlgGrid" [formGroup]="form" (ngSubmit)="save()">
+      <!-- LEFT: FORM -->
+      <section class="dlgForm">
+        <!-- 1 row -->
+        <div class="row2">
+          <div class="field">
+            <label>Тип</label>
+            <input
+              pInputText
+              formControlName="type"
+              placeholder="Введіть тип номеру"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field">
+            <label>Ціна за ніч</label>
+            <div class="money">
+              <p-inputNumber
+                formControlName="pricePerNight"
+                [min]="0"
+                [useGrouping]="true"
+                inputId="price"
+              ></p-inputNumber>
+              <span class="suffix">грн</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 row -->
+        <div class="row2">
+
+
+        </div>
+
+        <!-- description -->
+        <div class="field">
+          <label>Опис</label>
+          <textarea
+            pTextarea
+            rows="4"
+            formControlName="description"
+            placeholder="Введіть опис номеру..."
+          ></textarea>
+        </div>
+
+        <!-- PHOTOS -->
+        <div class="photosBox">
+          <div class="photosHeader">
+            <div class="phTitle">Фото</div>
+            <div class="phHint">Додавай URL — перше фото буде превʼю</div>
+          </div>
+
+          <div class="addPhotoRow">
+            <input
+              pInputText
+              [(ngModel)]="photoUrl"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="https://..."
+            />
+            <button pButton class="btn-mini" type="button" (click)="addPhoto()">
+              <i class="pi pi-plus" pButtonIcon></i>
+              <span pButtonLabel>Додати</span>
+            </button>
+          </div>
+
+          @if (photos().length) {
+            <div class="photoGrid">
+              @for (p of photos(); track p; let i = $index) {
+                <div class="phItem">
+                  <div class="phImg" [style.backgroundImage]="'url(' + p + ')'"></div>
+
+                  <button class="phRemove" type="button" (click)="removePhoto(i)" aria-label="remove">
+                    <i class="pi pi-times"></i>
+                  </button>
+
+                  @if (i === 0) {
+                    <div class="phPrimary">Основне</div>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="phEmpty">
+              <i class="pi pi-images"></i>
+              <span>Ще немає фото — додай хоча б одне для гарного превʼю</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- RIGHT: PREVIEW -->
+      <aside class="dlgPreview">
+        <div class="previewCard">
+          <div
+            class="previewImg"
+            [class.previewPlaceholder]="!photos().length"
+            [style.backgroundImage]="photos().length ? 'url(' + photos()[0] + ')' : null"
+          >
+            @if (!photos().length) {
+              <div class="previewPh">
+                <i class="pi pi-image"></i>
+                <div>Превʼю фото</div>
+              </div>
+            }
+
+            <div class="previewBadge" [class.dim]="form.get('status')?.value === 'HIDDEN'">
+              {{ form.get('status')?.value === 'ACTIVE' ? 'Активний' : 'Прихований' }}
+            </div>
+          </div>
+
+          <div class="previewBody">
+            <div class="pTop">
+              <div class="pTitle">
+                {{ form.get('title')?.value || 'Назва номера' }}
+              </div>
+              <div class="pPrice">
+                {{ (form.get('pricePerNight')?.value ?? 0) | number }} грн/ніч
+              </div>
+            </div>
+
+            <div class="pType">
+              {{ form.get('type')?.value || 'Тип' }}
+            </div>
+
+            <div class="pDesc">
+              {{ form.get('description')?.value || 'Опис зʼявиться тут…' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="previewTips">
+          <div class="tip">
+            <i class="pi pi-star"></i>
+            <span>Коротка назва + чітка ціна = краще сприйняття</span>
+          </div>
+          <div class="tip">
+            <i class="pi pi-image"></i>
+            <span>Додай 3–5 фото (перше — найкраще)</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- FOOTER -->
+      <footer class="dlgFooter">
+        <button pButton class="btn-ghost" type="button" (click)="dialogVisible = false">
+          <span pButtonLabel>Скасувати</span>
+        </button>
+
+        <button pButton class="btn-save" type="submit" [disabled]="form.invalid">
+          <i class="pi pi-check" pButtonIcon></i>
+          <span pButtonLabel>{{ mode() === 'create' ? 'Створити' : 'Зберегти' }}</span>
+        </button>
+      </footer>
+    </form>
+  </p-dialog>
+</div>

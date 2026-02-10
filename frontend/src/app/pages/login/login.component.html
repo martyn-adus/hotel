@@ -1,0 +1,105 @@
+<div class="login-page">
+  <div class="bg" aria-hidden="true"></div>
+
+  <main class="shell">
+    <section class="card" role="region" aria-label="Admin login">
+      <header class="header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <i class="pi pi-building"></i>
+          </div>
+
+          <div class="titles">
+            <div class="hotel">Hotel Admin</div>
+            <div class="subtitle">Вхід до панелі керування</div>
+          </div>
+        </div>
+      </header>
+
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label for="login">Логін</label>
+          <input
+            id="login"
+            type="text"
+            pInputText
+            formControlName="email"
+            placeholder="Введіть логін"
+            autocomplete="off"
+            [class.invalid]="f.email.touched && f.email.invalid"
+          />
+          @if (f.email.touched && f.email.invalid) {
+            <small class="hint">
+              Вкажи логін (мінімум 3 символи).
+            </small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="password">Пароль</label>
+          <p-password
+            inputId="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            placeholder="Введіть пароль"
+            autocomplete="off"
+            class="pw"
+            [inputStyleClass]="(f.password.touched && f.password.invalid) ? 'invalid' : ''"
+          ></p-password>
+
+          @if(f.password.touched && f.password.invalid){
+            <small class="hint">
+              Пароль має містити мінімум 6 символів.
+            </small>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="error">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>{{ error() }}</span>
+          </div>
+        }
+
+        <button
+          pButton
+          type="submit"
+          class="btn"
+          [loading]="loading()"
+          [disabled]="loading()"
+        >
+          <i
+            class="pi pi-sign-in"
+            pButtonIcon
+          ></i>
+
+          <span pButtonLabel>Увійти</span>
+        </button>
+
+
+        <div class="meta">
+          <span class="dot"></span>
+          <span>Захищений доступ • лише для адміністратора</span>
+        </div>
+      </form>
+    </section>
+
+    <aside class="side">
+      <div class="side-inner">
+        <div class="kicker">Premium Hotel Experience</div>
+        <h1 class="headline">Керуй бронюваннями легко і красиво</h1>
+        <p class="lead">
+          Мінімалістичний преміум-інтерфейс у теплій палітрі. Швидко працює, добре виглядає
+          на мобільному та на десктопі.
+        </p>
+
+        <div class="features">
+          <div class="chip"><i class="pi pi-bolt"></i> Швидко</div>
+          <div class="chip"><i class="pi pi-shield"></i> Безпечно</div>
+          <div class="chip"><i class="pi pi-mobile"></i> Адаптивно</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
