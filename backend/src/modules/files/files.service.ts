@@ -1,6 +1,7 @@
 import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { Client as MinioClient } from 'minio';
 import { randomUUID } from 'node:crypto';
+import { extname } from 'node:path';
 interface UploadFile {
   buffer: Buffer;
   originalname?: string;
@@ -11,8 +12,8 @@ interface UploadFile {
 export class FilesService {
   private readonly minioClient?: MinioClient;
   private readonly bucketName: string;
-  private readonly presignedExpirySeconds: number;
   private readonly minioEnabled: boolean;
+  private readonly fileLinkBaseUrl: string;
 
   constructor() {
     const endpoint = process.env.MINIO_ENDPOINT ?? 'localhost';
@@ -22,8 +23,8 @@ export class FilesService {
     const secretKey = process.env.MINIO_SECRET_KEY ?? '';
 
     this.bucketName = process.env.MINIO_BUCKET ?? 'hotel-media';
-    this.presignedExpirySeconds = Number(process.env.MINIO_PRESIGNED_EXPIRES ?? 3600);
     this.minioEnabled = Boolean(accessKey && secretKey);
+    this.fileLinkBaseUrl = (process.env.FILES_PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
     if (this.minioEnabled) {
       this.minioClient = new MinioClient({
         endPoint: endpoint,
@@ -35,7 +36,7 @@ export class FilesService {
     }
   }
 
-  async upload(files?: unknown[]) {
+  async upload(files?: unknown[], baseUrl?: string, basePath?: string) {
     if (!this.minioEnabled || !this.minioClient) {
       throw new BadRequestException('MinIO access key/secret key are required');
     }
@@ -43,16 +44,16 @@ export class FilesService {
       throw new BadRequestException('Files are required');
     }
 
-    const results: { link: string; expires?: string }[] = [];
+    const results: string[] = [];
 
     for (const file of files) {
-      results.push(await this.uploadOne(file));
+      results.push(await this.uploadOne(file, baseUrl, basePath));
     }
 
-    return results.length === 1 ? results[0] : results;
+    return results;
   }
 
-  private async uploadOne(file?: unknown) {
+  private async uploadOne(file?: unknown, baseUrl?: string, basePath?: string) {
     if (!this.isUploadFile(file)) {
       throw new BadRequestException('File is required');
     }
@@ -62,7 +63,8 @@ export class FilesService {
 
     const filename = file.originalname || `upload-${randomUUID()}`;
     const contentType = file.mimetype || 'application/octet-stream';
-    const objectName = `${randomUUID()}-${filename}`;
+    const fileExtension = extname(filename);
+    const objectName = `${randomUUID()}${fileExtension}`;
 
     try {
       const bucketExists = await this.minioClient.bucketExists(this.bucketName);
@@ -77,20 +79,44 @@ export class FilesService {
         file.buffer.length,
         {
           'Content-Type': contentType,
+          'x-amz-meta-original-name': filename,
         },
       );
     } catch (error) {
       throw new BadGatewayException('MinIO upload failed');
     }
 
-    return {
-      link: await this.minioClient.presignedGetObject(
-        this.bucketName,
-        objectName,
-        this.presignedExpirySeconds,
-      ),
-      expires: new Date(Date.now() + this.presignedExpirySeconds * 1000).toISOString(),
-    };
+    return this.buildPublicLink(objectName, baseUrl, basePath);
+  }
+
+  async getPublicObject(objectName: string) {
+    if (!this.minioEnabled || !this.minioClient) {
+      throw new BadRequestException('MinIO access key/secret key are required');
+    }
+    if (!objectName) {
+      throw new BadRequestException('File id is required');
+    }
+    if (objectName.includes('/') || objectName.includes('..')) {
+      throw new BadRequestException('Invalid file id');
+    }
+
+    try {
+      const [stat, stream] = await Promise.all([
+        this.minioClient.statObject(this.bucketName, objectName),
+        this.minioClient.getObject(this.bucketName, objectName),
+      ]);
+
+      return {
+        stream,
+        stat,
+        filename:
+          stat.metaData?.['x-amz-meta-original-name'] ??
+          stat.metaData?.['X-Amz-Meta-Original-Name'] ??
+          objectName,
+      };
+    } catch (error) {
+      throw new BadGatewayException('MinIO download failed');
+    }
   }
 
   private isUploadFile(file: unknown): file is UploadFile {
@@ -101,4 +127,16 @@ export class FilesService {
     return Buffer.isBuffer((file as UploadFile).buffer);
   }
 
+  private buildPublicLink(objectName: string, baseUrl?: string, basePath?: string) {
+    const resolvedBaseUrl = (baseUrl ?? this.fileLinkBaseUrl ?? '').replace(/\/$/, '');
+    const resolvedBasePath = (basePath ?? '/files').replace(/\/$/, '');
+    const resolvedBasePathWithApi = resolvedBasePath.startsWith('/api')
+      ? resolvedBasePath
+      : `/api${resolvedBasePath === '/' ? '' : resolvedBasePath}`;
+    if (resolvedBaseUrl) {
+      return `${resolvedBaseUrl}${resolvedBasePathWithApi}/public/${objectName}`;
+    }
+
+    return `${resolvedBasePathWithApi}/public/${objectName}`;
+  }
 }
