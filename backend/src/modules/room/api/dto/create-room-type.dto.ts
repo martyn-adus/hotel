@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   Min,
 } from 'class-validator';
 
@@ -27,7 +26,6 @@ export class CreateRoomTypeDto {
   description?: string;
 
   @IsArray()
-  @IsUrl({}, { each: true })
   @IsOptional()
   mediaUrls?: string[];
 }
