@@ -17,7 +17,6 @@ export class BookingRequest extends BaseEntity {
   private _additionalWishes?: string;
   private _status: BookingRequestStatus;
   private _roomTypeId: string;
-  private _updatedAt: Date;
 
   constructor(id: UUID, createdAt: Date) {
     super(id, createdAt);
@@ -53,9 +52,5 @@ export class BookingRequest extends BaseEntity {
 
   get roomTypeId(): string {
     return this._roomTypeId;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
   }
 }

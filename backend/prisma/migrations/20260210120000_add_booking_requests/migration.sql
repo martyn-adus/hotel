@@ -8,7 +8,6 @@ CREATE TABLE "booking_requests" (
     "email" TEXT NOT NULL,
     "additionalWishes" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "booking_requests_pkey" PRIMARY KEY ("id")
 );

@@ -92,7 +92,6 @@ export class BookingRequestRepository {
       _additionalWishes: prismaBooking.additionalWishes,
       _status: prismaBooking.status,
       _roomTypeId: prismaBooking.roomTypeId,
-      _updatedAt: prismaBooking.updatedAt,
     });
   }
 }
