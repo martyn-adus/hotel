@@ -5,9 +5,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RoomModule } from './modules/room/room.module';
 import { JwtAuthGuard } from './shared/guards/jwt-auth.guard';
 import { FilesModule } from './modules/files/files.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, RoomModule, FilesModule],
+  imports: [PrismaModule, AuthModule, RoomModule, FilesModule, BookingModule],
   controllers: [],
   providers: [
     {

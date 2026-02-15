@@ -9,6 +9,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BookingRequestStatus {
+  pending
+  processed
+  confirmed
+  declined
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -25,9 +32,27 @@ model RoomType {
   capacity      Int
   pricePerNight Decimal  @db.Decimal(10, 2)
   description   String?
-  mediaUrls     String[] @default([])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  mediaUrls        String[] @default([])
+  bookingRequests  BookingRequest[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@map("room_types")
+}
+
+model BookingRequest {
+  id               String   @id @default(uuid())
+  firstName        String
+  lastName         String
+  patronymic       String
+  phoneNumber      String
+  email            String
+  additionalWishes String?
+  status           BookingRequestStatus @default(pending)
+  roomTypeId       String
+  roomType         RoomType @relation(fields: [roomTypeId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("booking_requests")
 }
