@@ -18,8 +18,8 @@ export class BookingRequest extends BaseEntity {
   private _status: BookingRequestStatus;
   private _roomTypeId: string;
 
-  constructor(id: UUID, createdAt: Date) {
-    super(id, createdAt);
+  constructor(id: UUID, createdAt: Date, updatedAt: Date) {
+    super(id, createdAt, updatedAt);
   }
 
   get firstName(): string {

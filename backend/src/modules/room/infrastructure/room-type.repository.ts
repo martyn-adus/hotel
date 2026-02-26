@@ -27,18 +27,24 @@ export class RoomTypeRepository {
 
   async create(data: {
     type: string;
+    title: string;
     capacity: number;
     pricePerNight: number;
     description?: string;
     mediaUrls?: string[];
+    view?: string[];
+    comfort?: string[];
   }): Promise<RoomType> {
     const roomType = await this.prisma.roomType.create({
       data: {
         type: data.type,
+        title: data.title,
         capacity: data.capacity,
         pricePerNight: data.pricePerNight,
         description: data.description,
         mediaUrls: data.mediaUrls ?? [],
+        view: data.view ?? [],
+        comfort: data.comfort ?? [],
       },
     });
 
@@ -49,10 +55,13 @@ export class RoomTypeRepository {
     id: string,
     data: {
       type?: string;
+      title?: string;
       capacity?: number;
       pricePerNight?: number;
       description?: string;
       mediaUrls?: string[];
+      view?: string[];
+      comfort?: string[];
     },
   ): Promise<RoomType> {
     const roomType = await this.prisma.roomType.update({
@@ -70,13 +79,15 @@ export class RoomTypeRepository {
   }
 
   private toDomain(prismaRoomType: any): RoomType {
-    return Object.assign(new RoomType(prismaRoomType.id, prismaRoomType.createdAt), {
+    return Object.assign(new RoomType(prismaRoomType.id, prismaRoomType.createdAt, prismaRoomType.updatedAt), {
       _type: prismaRoomType.type,
+      _title: prismaRoomType.title,
       _capacity: prismaRoomType.capacity,
       _pricePerNight: Number(prismaRoomType.pricePerNight),
       _description: prismaRoomType.description,
       _mediaUrls: prismaRoomType.mediaUrls ?? [],
-      _updatedAt: prismaRoomType.updatedAt,
+      _view: prismaRoomType.view ?? [],
+      _comfort: prismaRoomType.comfort ?? [],
     });
   }
 }

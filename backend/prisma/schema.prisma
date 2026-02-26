@@ -29,10 +29,13 @@ model User {
 model RoomType {
   id            String   @id @default(uuid())
   type          String
+  title         String
   capacity      Int
   pricePerNight Decimal  @db.Decimal(10, 2)
   description   String?
   mediaUrls        String[] @default([])
+  view             String[] @default([])
+  comfort          String[] @default([])
   bookingRequests  BookingRequest[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

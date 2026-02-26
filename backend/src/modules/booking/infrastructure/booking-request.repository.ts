@@ -83,7 +83,9 @@ export class BookingRequestRepository {
   }
 
   private toDomain(prismaBooking: any): BookingRequest {
-    return Object.assign(new BookingRequest(prismaBooking.id, prismaBooking.createdAt), {
+    return Object.assign(
+      new BookingRequest(prismaBooking.id, prismaBooking.createdAt, prismaBooking.updatedAt),
+      {
       _firstName: prismaBooking.firstName,
       _lastName: prismaBooking.lastName,
       _patronymic: prismaBooking.patronymic,
@@ -92,6 +94,7 @@ export class BookingRequestRepository {
       _additionalWishes: prismaBooking.additionalWishes,
       _status: prismaBooking.status,
       _roomTypeId: prismaBooking.roomTypeId,
-    });
+      },
+    );
   }
 }

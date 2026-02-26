@@ -4,6 +4,7 @@ export class BaseEntity {
   constructor(
     private readonly _id: UUID,
     private readonly _createdAt: Date,
+    private readonly _updatedAt: Date,
   ) {}
 
   get id(): UUID {
@@ -14,4 +15,7 @@ export class BaseEntity {
     return this._createdAt;
   }
 
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
 }

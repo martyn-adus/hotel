@@ -5,8 +5,8 @@ export class User extends BaseEntity {
   private _email: string;
   private _passwordHash: string;
 
-  constructor(id: UUID, createdAt: Date) {
-    super(id, createdAt);
+  constructor(id: UUID, createdAt: Date, updatedAt: Date) {
+    super(id, createdAt, updatedAt);
   }
 
   get email(): string {

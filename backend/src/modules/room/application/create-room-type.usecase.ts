@@ -7,10 +7,13 @@ export class CreateRoomTypeUseCase {
 
   async execute(data: {
     type: string;
+    title: string;
     capacity: number;
     pricePerNight: number;
     description?: string;
     mediaUrls?: string[];
+    view?: string[];
+    comfort?: string[];
   }) {
     return this.roomTypeRepository.create(data);
   }

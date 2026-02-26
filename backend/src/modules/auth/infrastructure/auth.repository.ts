@@ -30,7 +30,7 @@ export class AuthRepository {
   }
 
   private toDomain(prismaUser: any): User {
-    return Object.assign(new User(prismaUser.id, prismaUser.createdAt), {
+    return Object.assign(new User(prismaUser.id, prismaUser.createdAt, prismaUser.updatedAt), {
       _email: prismaUser.email,
       _passwordHash: prismaUser.password,
     });

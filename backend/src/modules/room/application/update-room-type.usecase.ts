@@ -9,10 +9,13 @@ export class UpdateRoomTypeUseCase {
     id: string,
     data: {
       type?: string;
+      title?: string;
       capacity?: number;
       pricePerNight?: number;
       description?: string;
       mediaUrls?: string[];
+      view?: string[];
+      comfort?: string[];
     },
   ) {
     const roomType = await this.roomTypeRepository.findById(id);

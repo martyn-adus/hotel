@@ -13,6 +13,10 @@ export class CreateRoomTypeDto {
   @IsNotEmpty()
   type: string;
 
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
   @IsInt()
   @Min(1)
   capacity: number;
@@ -28,4 +32,14 @@ export class CreateRoomTypeDto {
   @IsArray()
   @IsOptional()
   mediaUrls?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  view?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  comfort?: string[];
 }

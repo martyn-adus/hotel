@@ -5,6 +5,10 @@ export class UpdateRoomTypeDto {
   @IsOptional()
   type?: string;
 
+  @IsString()
+  @IsOptional()
+  title?: string;
+
   @IsInt()
   @Min(1)
   @IsOptional()
@@ -23,4 +27,14 @@ export class UpdateRoomTypeDto {
   @IsUrl({}, { each: true })
   @IsOptional()
   mediaUrls?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  view?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  comfort?: string[];
 }
