@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -22,19 +22,17 @@ import {Router} from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private fb = new FormBuilder();
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private auth = inject(AuthService);
 
   loading = signal(false);
   error = signal<string | null>(null);
 
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-
-  isInvalid = computed(() => this.form.invalid);
-
-  constructor(private router: Router, private auth: AuthService) {}
 
   async submit(): Promise<void> {
     this.error.set(null);
@@ -48,19 +46,15 @@ export class LoginComponent {
     try {
       const { email, password } = this.form.getRawValue();
 
-      // ВАЖЛИВО: бекенд очікує email
       await this.auth.login(email!, password!);
 
       await this.router.navigateByUrl('/admin/rooms');
-    } catch (e: any) {
-      // якщо Nest повертає 401
+    } catch {
       this.error.set('Невірний логін або пароль.');
     } finally {
       this.loading.set(false);
     }
   }
-
-
 
   get f() {
     return this.form.controls;

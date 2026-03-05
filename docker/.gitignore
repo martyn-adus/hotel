@@ -1,0 +1,20 @@
+# Environment variables (contains sensitive data)
+.env
+
+# SSL certificates (never commit private keys!)
+ssl/
+*.pem
+*.key
+*.crt
+
+# Docker volumes data
+postgres_data/
+minio_data/
+
+# Backup files
+*.sql
+*.tar.gz
+*.backup
+
+# Logs
+*.log

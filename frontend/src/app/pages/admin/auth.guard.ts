@@ -5,11 +5,12 @@ import { AuthService } from './auth.service';
 
 export const authGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
-
   if (!isPlatformBrowser(platformId)) return true;
 
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  return auth.authed() ? true : router.parseUrl('/login');
+  if (auth.authed()) return true;
+
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: router.url } });
 };

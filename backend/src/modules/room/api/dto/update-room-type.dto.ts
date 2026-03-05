@@ -24,7 +24,6 @@ export class UpdateRoomTypeDto {
   description?: string;
 
   @IsArray()
-  @IsUrl({}, { each: true })
   @IsOptional()
   mediaUrls?: string[];
 

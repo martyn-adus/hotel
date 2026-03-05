@@ -1,0 +1,313 @@
+<div class="public">
+  <section class="hero">
+    <div class="heroMedia" [style.backgroundImage]="'url(' + heroImageUrl + ')'"></div>
+
+    <div class="heroShade"></div>
+
+    <div class="heroContent">
+      <div class="brand">Кайзервальд</div>
+      <h1 class="heroTitle">Відпочинок у теплій, преміальній атмосфері</h1>
+      <p class="heroLead">
+        Обирай тип номера, подивись фото та деталі — і забронюй в один клік.
+      </p>
+
+      <div class="heroActions">
+        <button pButton class="btnPrimary" type="button" label="Переглянути номери" (click)="scrollToRooms()"></button>
+        <button pButton class="btnGhost" type="button" label="Контакти" (click)="scrollToContacts()"></button>
+      </div>
+
+      <div class="heroChips">
+        <div class="chip"><i class="pi pi-map-marker"></i><span>Карпати</span></div>
+        <div class="chip"><i class="pi pi-star-fill"></i><span>Premium</span></div>
+        <div class="chip"><i class="pi pi-wifi"></i><span>Wi-Fi</span></div>
+        <div class="chip"><i class="pi pi-shop"></i><span>Ресторан</span></div>
+        <div class="chip"><i class="pi pi-home"></i><span>Обслуговування номерів</span></div>
+        <div class="chip"><i class="pi pi-ban"></i><span>Номери для некурців</span></div>
+        <div class="chip"><i class="pi pi-car"></i><span>Автостоянка (на території)</span></div>
+        <div class="chip"><i class="pi pi-users"></i><span>Сімейні номери</span></div>
+        <div class="chip"><i class="pi pi-sun"></i><span>Блискучий сніданок</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="aboutWrap">
+      <div class="aboutHead">
+        <div class="aboutKicker">Про готель</div>
+        <div class="aboutTitle">Кайзервальд — тиша Карпат</div>
+
+        <div class="aboutText">
+          У помешканні Кайзервальд Карпати до розпорядження гостей сад та ресторан, обслуговування номерів і безкоштовний Wi-Fi.
+          Номери з кондиціонером, балконами та краєвидами на гори. Ідеально для відпочинку, хайкінгу та сімейних подорожей.
+        </div>
+      </div>
+
+      <div class="aboutGallery">
+        <div class="tile t1" [style.backgroundImage]="'url(' + aboutImages[0] + ')'"></div>
+        <div class="tile t2" [style.backgroundImage]="'url(' + aboutImages[1] + ')'"></div>
+        <div class="tile t3" [style.backgroundImage]="'url(' + aboutImages[2] + ')'"></div>
+        <div class="tile t4" [style.backgroundImage]="'url(' + aboutImages[3] + ')'"></div>
+      </div>
+
+      <div class="around">
+        <div class="aroundHead">
+          <div class="aroundTitle">Навколо готелю</div>
+        </div>
+
+        <div class="aroundGrid">
+          <div class="aroundCol">
+            <div class="aroundColTitle">
+              <i class="pi pi-utensils"></i>
+              <span>Ресторани та кафе</span>
+            </div>
+
+            <div class="aroundList">
+              <div class="aroundRow">
+                <div class="aroundLeft">Кафе/бар · Chigo</div>
+                <div class="aroundRight">350 м</div>
+              </div>
+              <div class="aroundRow">
+                <div class="aroundLeft">Кафе/бар · Казка</div>
+                <div class="aroundRight">400 м</div>
+              </div>
+              <div class="aroundRow">
+                <div class="aroundLeft">Кафе/бар · Бахус</div>
+                <div class="aroundRight">6 км</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="aroundCol">
+            <div class="aroundColTitle">
+              <i class="pi pi-car"></i>
+              <span>Громадський транспорт</span>
+            </div>
+
+            <div class="aroundList">
+              <div class="aroundRow">
+                <div class="aroundLeft">Поїзд · Карпати</div>
+                <div class="aroundRight">550 м</div>
+              </div>
+              <div class="aroundRow">
+                <div class="aroundLeft">Поїзд · Пасіка</div>
+                <div class="aroundRight">3,1 км</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rooms" id="rooms">
+    <div class="roomsWrap">
+    <div class="roomsTop">
+      <div>
+        <div class="h2">Типи номерів</div>
+        <div class="sub">Натисни на картку, щоб побачити повні деталі</div>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="skeletonGrid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="skeletonCard"></div>
+        }
+      </div>
+    } @else {
+      <div class="grid">
+        @for (r of roomTypes(); track r.id) {
+          <article class="card" (click)="openDetails(r)" role="button" tabindex="0">
+            <div class="cover" [class.ph]="!primaryPhoto(r)" [style.backgroundImage]="primaryPhoto(r) ? 'url(' + primaryPhoto(r) + ')' : null">
+              @if (!primaryPhoto(r)) {
+                <div class="phInner">
+                  <i class="pi pi-image"></i>
+                  <span>Нема фото</span>
+                </div>
+              }
+              <div class="badge">{{ r.capacity }} гості</div>
+            </div>
+
+            <div class="body">
+              <div class="row">
+                <div class="title">{{ r.type }}</div>
+                <div class="price">{{ r.pricePerNight | number }} грн/ніч</div>
+              </div>
+              <div class="meta">Місткість: {{ r.capacity }}</div>
+              <div class="desc">{{ r.title || 'Опис буде додано' }}</div>
+
+              <div class="cta">
+                <button pButton class="btnCard" type="button" label="Детальніше" (click)="$event.stopPropagation(); openDetails(r)"></button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+    </div>
+  </section>
+
+  <section class="amenities">
+    <div class="amenitiesWrap">
+      <div class="amenTop">
+        <div class="h2">Зручності</div>
+        <div class="sub">Все необхідне для комфортного відпочинку — у номері та на території</div>
+      </div>
+
+      <div class="amenCard">
+        <div class="amenGrid">
+          <!-- COL 1 -->
+          <div class="amenCol">
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-star-fill"></i>
+                <div class="amenTitle">Чудове доповнення</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Власна ванна кімната</span></li>
+                <li><i class="pi pi-check"></i><span>Безкоштовний Wi-Fi</span></li>
+                <li><i class="pi pi-check"></i><span>Автостоянка</span></li>
+                <li><i class="pi pi-check"></i><span>Балкон</span></li>
+                <li><i class="pi pi-check"></i><span>Сімейні номери</span></li>
+                <li><i class="pi pi-check"></i><span>Номери для некурців</span></li>
+              </ul>
+            </div>
+
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-home"></i>
+                <div class="amenTitle">Ванна кімната</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Душ / ванна</span></li>
+                <li><i class="pi pi-check"></i><span>Рушники та білизна</span></li>
+                <li><i class="pi pi-check"></i><span>Фен</span></li>
+                <li><i class="pi pi-check"></i><span>Туалетно-косметичні засоби</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="amenCol">
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-wifi"></i>
+                <div class="amenTitle">Інтернет</div>
+              </div>
+              <div class="amenNote">
+                Безкоштовний доступ до інтернету надається на всій території готелю.
+              </div>
+            </div>
+
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-shop"></i>
+                <div class="amenTitle">Їжа і напої</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Сніданок у номері</span></li>
+                <li><i class="pi pi-check"></i><span>Ресторан</span></li>
+                <li><i class="pi pi-check"></i><span>Кав’ярня (на території)</span></li>
+                <li>
+                  <i class="pi pi-check"></i>
+                  <span>Вино / шампанське</span>
+                  <span class="tag">оплачується окремо</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-car"></i>
+                <div class="amenTitle">Парковка</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Парковка на території</span></li>
+                <li><i class="pi pi-check"></i><span>Парковка на вулиці</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="amenCol">
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-shield"></i>
+                <div class="amenTitle">Безпека</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Відеоспостереження (зовні/спільні зони)</span></li>
+                <li><i class="pi pi-check"></i><span>Датчики диму</span></li>
+                <li><i class="pi pi-check"></i><span>Вхід за ключем</span></li>
+                <li><i class="pi pi-check"></i><span>Сейф</span></li>
+              </ul>
+            </div>
+
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-sliders-h"></i>
+                <div class="amenTitle">Загальні</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Кондиціонер</span></li>
+                <li><i class="pi pi-check"></i><span>Опалення</span></li>
+                <li><i class="pi pi-check"></i><span>Ліфт</span></li>
+                <li><i class="pi pi-check"></i><span>Звукоізоляція</span></li>
+              </ul>
+            </div>
+
+            <div class="amenGroup">
+              <div class="amenHead">
+                <i class="pi pi-comment"></i>
+                <div class="amenTitle">Мова спілкування</div>
+              </div>
+              <ul class="amenList">
+                <li><i class="pi pi-check"></i><span>Українська</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="amenFooter">
+          <div class="amenHint">
+            <i class="pi pi-info-circle"></i>
+            <span>Деякі послуги можуть надаватись за попереднім запитом або за додаткову плату.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contacts" id="contacts">
+    <div class="contactsWrap">
+      <div class="contactsHead">
+        <div>
+          <div class="h2">Контакти</div>
+          <div class="sub">Напиши або зателефонуй — швидко підтвердимо бронювання</div>
+        </div>
+      </div>
+
+      <div class="contactsGrid">
+        <div class="contactsCard">
+          <div class="cTitle">
+            <i class="pi pi-phone"></i>
+            <span>Телефон</span>
+          </div>
+
+          <a class="cLink" href="tel:+380503903030">+38 (050) 390 30 30</a>
+          <div class="cHint">Дзвінки / Viber / Telegram</div>
+        </div>
+
+        <div class="contactsCard">
+          <div class="cTitle">
+            <i class="pi pi-instagram"></i>
+            <span>Instagram</span>
+          </div>
+
+          <a class="cLink" href="https://instagram.com/kaiserwald_hotel?igsh=dnJmdmhmbTZmeWVr" target="_blank" rel="noopener">
+            Kaiserwald Hotel
+          </a>
+          <div class="cHint">Фото та новини готелю</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

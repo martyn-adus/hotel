@@ -21,17 +21,15 @@
           <label for="login">Логін</label>
           <input
             id="login"
-            type="text"
+            type="email"
             pInputText
             formControlName="email"
-            placeholder="Введіть логін"
-            autocomplete="off"
+            placeholder="Введіть email"
+            autocomplete="username"
             [class.invalid]="f.email.touched && f.email.invalid"
           />
           @if (f.email.touched && f.email.invalid) {
-            <small class="hint">
-              Вкажи логін (мінімум 3 символи).
-            </small>
+            <small class="hint">Вкажи коректний email.</small>
           }
         </div>
 
@@ -43,15 +41,13 @@
             [toggleMask]="true"
             [feedback]="false"
             placeholder="Введіть пароль"
-            autocomplete="off"
+            autocomplete="current-password"
             class="pw"
             [inputStyleClass]="(f.password.touched && f.password.invalid) ? 'invalid' : ''"
           ></p-password>
 
-          @if(f.password.touched && f.password.invalid){
-            <small class="hint">
-              Пароль має містити мінімум 6 символів.
-            </small>
+          @if (f.password.touched && f.password.invalid) {
+            <small class="hint">Пароль має містити мінімум 6 символів.</small>
           }
         </div>
 
@@ -67,16 +63,11 @@
           type="submit"
           class="btn"
           [loading]="loading()"
-          [disabled]="loading()"
+          [disabled]="form.invalid || loading()"
         >
-          <i
-            class="pi pi-sign-in"
-            pButtonIcon
-          ></i>
-
+          <i class="pi pi-sign-in" pButtonIcon></i>
           <span pButtonLabel>Увійти</span>
         </button>
-
 
         <div class="meta">
           <span class="dot"></span>

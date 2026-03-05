@@ -1,0 +1,107 @@
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="h1">Заявки на бронювання</div>
+      <div class="sub">Користувачі, які залишили заявку</div>
+    </div>
+  </div>
+
+  <div class="tableCard">
+  <p-table
+    [value]="bookings()"
+    [loading]="loading()"
+    class="bookingTable"
+    [scrollable]="true"
+    [tableStyle]="{ width: '100%'}"
+  >
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Дата</th>
+        <th>Ім'я</th>
+        <th>Телефон</th>
+        <th>Email</th>
+        <th>Побажання</th>
+        <th>Статус</th>
+        <th style="width:180px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-b>
+      <tr>
+
+        <td>
+          {{ b.createdAt | date:'dd.MM.yyyy HH:mm' }}
+        </td>
+
+        <td class="name">
+          {{ b.lastName }} {{ b.firstName }}
+        </td>
+
+        <td>{{ b.phoneNumber }}</td>
+
+        <td>{{ b.email }}</td>
+
+        <td class="wishes">
+          {{ b.additionalWishes || '—' }}
+        </td>
+
+        <td>
+
+          @if (b.status === 'pending'){
+            <p-tag
+              value="Очікує"
+              severity="warn"
+            ></p-tag>
+          }
+
+          @if (b.status === 'confirmed'){
+            <p-tag
+              value="Підтверджено"
+              severity="success"
+            ></p-tag>
+          }
+
+          @if (b.status === 'declined'){
+            <p-tag
+              value="Відхилено"
+              severity="danger"
+            ></p-tag>
+          }
+
+        </td>
+
+        <td class="actionBtns">
+          @if (b.status === 'pending') {
+            <button
+              pButton
+              icon="pi pi-check"
+              class="p-button-success"
+              (click)="askConfirm($event, b.id)"
+            ></button>
+
+            <button
+              pButton
+              icon="pi pi-times"
+              class="p-button-danger"
+              (click)="askDecline($event, b.id)"
+            ></button>
+          }
+        </td>
+
+      </tr>
+    </ng-template>
+
+  </p-table>
+  </div>
+
+  <p-confirmDialog
+    key="bookingStatus"
+    styleClass="lux-confirm"
+    appendTo="body"
+    [closable]="true"
+    [closeOnEscape]="true"
+    [dismissableMask]="true"
+  ></p-confirmDialog>
+</div>

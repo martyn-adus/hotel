@@ -1,27 +1,30 @@
 <div class="page">
   <header class="top">
     <div>
-      <div class="h1">Номери готелю</div>
+      <div class="h1">Типи номерів</div>
       <div class="h2">Створюй, редагуй, додавай фото та керуй цінами.</div>
     </div>
 
-    <button pButton class="btn-add" type="button" (click)="openCreate()">
-      <i class="pi pi-plus" pButtonIcon></i>
-      <span pButtonLabel>Додати номер</span>
-    </button>
+    <!-- ✅ Стабільний PrimeNG pButton (icon/label) -->
+    <button
+      pButton
+      type="button"
+      class="btn-add"
+      icon="pi pi-plus"
+      label="Додати номер"
+      (click)="openCreate()"
+    ></button>
   </header>
 
   <section class="grid">
     @for (r of rooms(); track r.id) {
       <article class="room">
         <div class="thumb">
-          <div class="badge" [class.hidden]="r.status === 'HIDDEN'">
-            {{ r.status === 'ACTIVE' ? 'Активний' : 'Прихований' }}
-          </div>
+          <!-- ⚠️ status у room-types немає, тому бейдж прибрав (або можеш зробити статичний) -->
+          <!-- <div class="badge">Активний</div> -->
 
-          @if (r.photos.length) {
-            <div class="thumbInner"
-                 [style.backgroundImage]="'url(' + r.photos[0] + ')'"></div>
+          @if (r.mediaUrls.length) {
+            <div class="thumbInner" [style.backgroundImage]="'url(' + r.mediaUrls[0] + ')'"></div>
           } @else {
             <div class="thumbInner ph">
               <i class="pi pi-image"></i>
@@ -32,23 +35,34 @@
 
         <div class="body">
           <div class="titleRow">
-            <div class="title">{{ r.title }}</div>
+            <!-- ✅ title -> type -->
+            <div class="title">{{ r.type }}</div>
             <div class="price">{{ r.pricePerNight | number }} грн/ніч</div>
           </div>
 
-          <div class="type">{{ r.type }}</div>
-          <div class="desc">{{ r.description }}</div>
+          <!-- ✅ capacity показуємо тут -->
+          <div class="type">Місткість: {{ r.capacity }}</div>
+
+          <div class="desc">{{ r.title }}</div>
 
           <div class="actions">
-            <button pButton class="ghost" type="button" (click)="openEdit(r)">
-              <i class="pi pi-pencil" pButtonIcon></i>
-              <span pButtonLabel>Редагувати</span>
-            </button>
+            <button
+              pButton
+              type="button"
+              class="ghost"
+              icon="pi pi-pencil"
+              label="Редагувати"
+              (click)="openEdit(r)"
+            ></button>
 
-            <button pButton class="danger" type="button" (click)="remove(r)">
-              <i class="pi pi-trash" pButtonIcon></i>
-              <span pButtonLabel>Видалити</span>
-            </button>
+            <button
+              pButton
+              type="button"
+              class="danger"
+              icon="pi pi-trash"
+              label="Видалити"
+              (click)="confirmRemove(r)"
+            ></button>
           </div>
         </div>
       </article>
@@ -60,9 +74,9 @@
     [modal]="true"
     [draggable]="false"
     [resizable]="false"
-    [style]="{ width: dialogWidth(), 'borders-radius': '12px'}"
+    [style]="{ width: dialogWidth(), 'border-radius': '12px' }"
     [contentStyle]="{ overflow: 'auto' }"
-    [breakpoints]="{ '900px' : '94vh','600px': '94vw'}"
+    [breakpoints]="{ '900px': '94vh', '600px': '94vw' }"
     [closeOnEscape]="true"
     class="room-dialog"
   >
@@ -74,7 +88,7 @@
 
         <div class="dlgTitles">
           <div class="dlgTitle">
-            {{ mode() === 'create' ? 'Новий номер' : 'Редагування номера' }}
+            {{ mode() === 'create' ? 'Новий тип номеру' : 'Редагування типу номеру' }}
           </div>
           <div class="dlgSub">
             Заповни дані — праворуч одразу побачиш превʼю картки.
@@ -82,10 +96,9 @@
         </div>
       </div>
     </ng-template>
+
     <form class="dlgGrid" [formGroup]="form" (ngSubmit)="save()">
-      <!-- LEFT: FORM -->
       <section class="dlgForm">
-        <!-- 1 row -->
         <div class="row2">
           <div class="field">
             <label>Тип</label>
@@ -111,15 +124,48 @@
           </div>
         </div>
 
-        <!-- 2 row -->
-        <div class="row2">
-
-
-        </div>
-
-        <!-- description -->
         <div class="field">
           <label>Опис</label>
+          <input pInputText formControlName="title" placeholder="Напр. Двомісний Deluxe з балконом" autocomplete="off" />
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Місткість</label>
+            <p-inputNumber
+              formControlName="capacity"
+              [min]="1"
+              [useGrouping]="false"
+              inputId="capacity"
+            ></p-inputNumber>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Вид з вікна</label>
+            <textarea
+              pTextarea
+              rows="3"
+              formControlName="viewText"
+              placeholder="Напр: вид на гори, вид на озеро"
+            ></textarea>
+            <small class="hint">Розділяй комою або з нового рядка</small>
+          </div>
+
+          <div class="field">
+            <label>Зручності</label>
+            <textarea
+              pTextarea
+              rows="3"
+              formControlName="comfortText"
+              placeholder="Напр: Wi-Fi, кондиціонер, сейф, холодильник"
+            ></textarea>
+            <small class="hint">Розділяй комою або з нового рядка</small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Детальна інформація</label>
           <textarea
             pTextarea
             rows="4"
@@ -128,25 +174,29 @@
           ></textarea>
         </div>
 
-        <!-- PHOTOS -->
         <div class="photosBox">
           <div class="photosHeader">
             <div class="phTitle">Фото</div>
-            <div class="phHint">Додавай URL — перше фото буде превʼю</div>
           </div>
 
-          <div class="addPhotoRow">
             <input
-              pInputText
-              [(ngModel)]="photoUrl"
-              [ngModelOptions]="{ standalone: true }"
-              placeholder="https://..."
+              #fileInput
+              type="file"
+              accept="image/*"
+              multiple
+              class="fileHidden"
+              (change)="onFilesSelected($event)"
             />
-            <button pButton class="btn-mini" type="button" (click)="addPhoto()">
-              <i class="pi pi-plus" pButtonIcon></i>
-              <span pButtonLabel>Додати</span>
-            </button>
-          </div>
+
+            <button
+              pButton
+              type="button"
+              class="btn-mini"
+              icon="pi pi-upload"
+              [label]="uploading() ? 'Завантаження...' : 'Завантажити фото'"
+              [disabled]="uploading()"
+              (click)="fileInput.click()"
+            ></button>
 
           @if (photos().length) {
             <div class="photoGrid">
@@ -173,7 +223,6 @@
         </div>
       </section>
 
-      <!-- RIGHT: PREVIEW -->
       <aside class="dlgPreview">
         <div class="previewCard">
           <div
@@ -188,15 +237,15 @@
               </div>
             }
 
-            <div class="previewBadge" [class.dim]="form.get('status')?.value === 'HIDDEN'">
-              {{ form.get('status')?.value === 'ACTIVE' ? 'Активний' : 'Прихований' }}
+            <div class="previewBadge">
+              Тип номеру
             </div>
           </div>
 
           <div class="previewBody">
             <div class="pTop">
               <div class="pTitle">
-                {{ form.get('title')?.value || 'Назва номера' }}
+                {{ form.get('type')?.value || 'Тип номеру' }}
               </div>
               <div class="pPrice">
                 {{ (form.get('pricePerNight')?.value ?? 0) | number }} грн/ніч
@@ -204,11 +253,11 @@
             </div>
 
             <div class="pType">
-              {{ form.get('type')?.value || 'Тип' }}
+              Місткість: {{ form.get('capacity')?.value ?? 1 }}
             </div>
 
             <div class="pDesc">
-              {{ form.get('description')?.value || 'Опис зʼявиться тут…' }}
+              {{ form.get('title')?.value || 'Опис зʼявиться тут…' }}
             </div>
           </div>
         </div>
@@ -216,7 +265,7 @@
         <div class="previewTips">
           <div class="tip">
             <i class="pi pi-star"></i>
-            <span>Коротка назва + чітка ціна = краще сприйняття</span>
+            <span>Короткий тип + чітка ціна = краще сприйняття</span>
           </div>
           <div class="tip">
             <i class="pi pi-image"></i>
@@ -225,17 +274,33 @@
         </div>
       </aside>
 
-      <!-- FOOTER -->
       <footer class="dlgFooter">
-        <button pButton class="btn-ghost" type="button" (click)="dialogVisible = false">
-          <span pButtonLabel>Скасувати</span>
-        </button>
+        <button
+          pButton
+          type="button"
+          class="btn-ghost"
+          label="Скасувати"
+          (click)="dialogVisible = false"
+        ></button>
 
-        <button pButton class="btn-save" type="submit" [disabled]="form.invalid">
-          <i class="pi pi-check" pButtonIcon></i>
-          <span pButtonLabel>{{ mode() === 'create' ? 'Створити' : 'Зберегти' }}</span>
-        </button>
+        <button
+          pButton
+          type="submit"
+          class="btn-save"
+          icon="pi pi-check"
+          [label]="mode() === 'create' ? 'Створити' : 'Зберегти'"
+          [disabled]="uploading()"
+        ></button>
       </footer>
     </form>
   </p-dialog>
 </div>
+
+<p-confirmDialog
+  key="deleteRoomType"
+  styleClass="lux-confirm"
+  appendTo="body"
+  [closable]="true"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+></p-confirmDialog>

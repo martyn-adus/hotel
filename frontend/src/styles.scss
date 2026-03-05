@@ -8,3 +8,17 @@ body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+
+:root {
+  /* form fields */
+  --p-form-field-background: #fbf7f0 !important;
+  --p-form-field-color: #1b1b18 !important;
+  --p-form-field-placeholder-color: rgba(27, 27, 24, 0.55) !important;
+  --p-form-field-border-color: rgba(0, 0, 0, 0.10) !important;
+  --p-form-field-border-radius: 14px !important;
+}
+
+/* (опційно) для textarea інколи є окремий alias */
+:root{
+  --p-textarea-background: var(--p-form-field-background);
+}

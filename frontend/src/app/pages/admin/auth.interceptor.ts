@@ -5,19 +5,20 @@ import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const platformId = inject(PLATFORM_ID);
-
   if (!isPlatformBrowser(platformId)) return next(req);
+
+  const isApiCall = req.url.startsWith('/api/');
+  const isLoginCall = req.url.startsWith('/api/auth/login');
+
+  if (!isApiCall || isLoginCall) return next(req);
 
   const auth = inject(AuthService);
   const token = auth.token();
-
   if (!token) return next(req);
 
   return next(
     req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+      setHeaders: { Authorization: `Bearer ${token}` },
+    }),
   );
 };

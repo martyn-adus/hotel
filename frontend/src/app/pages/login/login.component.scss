@@ -19,7 +19,6 @@
   --premium-border: rgba(203, 180, 148, 0.35);
   --premium-text: #f3e7d6;
 
-
   display: block;
   color: var(--ink);
 }
@@ -28,9 +27,10 @@
   min-height: 100svh;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(1200px 800px at 20% 15%, var(--beige) 0%, transparent 55%),
-  radial-gradient(900px 700px at 85% 30%, rgba(203, 180, 148, 0.55) 0%, transparent 60%),
-  linear-gradient(180deg, #151515 0%, #101010 100%);
+  background:
+    radial-gradient(1200px 800px at 20% 15%, var(--beige) 0%, transparent 55%),
+    radial-gradient(900px 700px at 85% 30%, rgba(203, 180, 148, 0.55) 0%, transparent 60%),
+    linear-gradient(180deg, #151515 0%, #101010 100%);
 }
 
 .bg {
@@ -119,7 +119,7 @@
     font-weight: 600;
   }
 
-  input[pInputText] {
+  input.p-inputtext {
     width: 100%;
     border-radius: 14px;
     padding: 12px 12px;
@@ -192,33 +192,71 @@
   border-radius: 16px;
   padding: 12px 14px;
   gap: 10px;
+}
 
-  /* PrimeNG button baseline override */
-  :host ::ng-deep &.p-button {
-    border: 0;
-    background: linear-gradient(135deg, #cbb494, #b99974);
-    color: #1b1b1b;
-    font-weight: 800;
-    letter-spacing: 0.2px;
-    box-shadow: 0 14px 34px rgba(0,0,0,.18);
-    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+:host ::ng-deep .btn.p-button {
+  border: 0;
+  background: linear-gradient(135deg, #cbb494, #b99974);
+  color: #1b1b1b;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
 
-    &:hover {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-      box-shadow: 0 18px 44px rgba(0,0,0,.22);
-    }
-
-    &:active {
-      transform: translateY(0px);
-      box-shadow: 0 12px 28px rgba(0,0,0,.18);
-    }
-
-    &:disabled {
-      filter: grayscale(0.25);
-      opacity: 0.75;
-    }
+  &:hover {
+    filter: brightness(1.02);
+    transform: translateY(-1px);
+    box-shadow: 0 18px 44px rgba(0,0,0,.22);
   }
+
+  &:active {
+    transform: translateY(0px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.18);
+  }
+}
+
+:host ::ng-deep .btn.p-button:disabled,
+:host ::ng-deep .btn.p-button.p-disabled {
+  cursor: not-allowed !important;
+  pointer-events: none;
+
+  opacity: 0.55 !important;
+  filter: grayscale(0.85) saturate(0.55) contrast(0.95) !important;
+
+  transform: none !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.14),
+    inset 0 1px 0 rgba(255,255,255,.35) !important;
+
+  background:
+    repeating-linear-gradient(
+        135deg,
+        rgba(255,255,255,.20) 0px,
+        rgba(255,255,255,.20) 10px,
+        rgba(0,0,0,.06) 10px,
+        rgba(0,0,0,.06) 20px
+    ),
+    linear-gradient(135deg, #cbb494, #b99974) !important;
+
+  color: rgba(27,27,27,.55) !important;
+}
+
+:host ::ng-deep .btn.p-button:disabled:hover,
+:host ::ng-deep .btn.p-button.p-disabled:hover,
+:host ::ng-deep .btn.p-button:disabled:active,
+:host ::ng-deep .btn.p-button.p-disabled:active {
+  transform: none !important;
+  filter: grayscale(0.85) saturate(0.55) contrast(0.95) !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.14),
+    inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+
+:host ::ng-deep .btn.p-button:disabled .p-button-icon,
+:host ::ng-deep .btn.p-button.p-disabled .p-button-icon,
+:host ::ng-deep .btn.p-button:disabled .p-button-label,
+:host ::ng-deep .btn.p-button.p-disabled .p-button-label {
+  opacity: 0.75;
 }
 
 .meta {

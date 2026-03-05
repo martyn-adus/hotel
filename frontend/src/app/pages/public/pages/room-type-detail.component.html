@@ -1,0 +1,169 @@
+<div class="detail">
+  <div class="topBar">
+    <button pButton class="btnBack" type="button" icon="pi pi-arrow-left" label="Назад" (click)="back()"></button>
+  </div>
+
+  @if (!room()) {
+    <div class="empty">
+      <div class="title">Номер не знайдено</div>
+      <div class="sub">Можливо, цей тип був видалений або посилання некоректне.</div>
+    </div>
+  } @else {
+    <div class="grid">
+      <div class="gallery">
+        <div
+          class="heroImg"
+          [style.backgroundImage]="heroUrl() ? 'url(' + heroUrl() + ')' : null"
+          [class.ph]="!heroUrl()"
+        >
+          @if (!heroUrl()) {
+            <div class="phInner">
+              <i class="pi pi-image"></i>
+              <div>Нема фото</div>
+            </div>
+          }
+
+          <div class="heroOverlay"></div>
+
+          <div class="heroMeta">
+            <div class="heroPill"><i class="pi pi-home"></i><span>Кайзервальд</span></div>
+            <div class="heroPill light"><i class="pi pi-users"></i><span>{{ room()!.capacity }} гості</span></div>
+          </div>
+        </div>
+
+        @if ((room()?.mediaUrls?.length ?? 0) > 1) {
+          <div class="thumbs">
+            @for (img of room()!.mediaUrls; track img; let i = $index) {
+              <button
+                type="button"
+                class="thumb"
+                [class.active]="img === heroUrl()"
+                [style.backgroundImage]="'url(' + img + ')'"
+                (click)="setHero(img)"
+                [attr.aria-label]="'photo ' + (i + 1)"
+              ></button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="info">
+        <div class="pill">Тип номеру</div>
+        <div class="h1">{{ room()!.type }}</div>
+
+        <div class="facts">
+          <div class="fact">
+            <div class="k">Ціна</div>
+            <div class="v">{{ room()!.pricePerNight | number }} грн / ніч</div>
+          </div>
+          <div class="fact">
+            <div class="k">Місткість</div>
+            <div class="v">{{ room()!.capacity }} гості</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="blockTitle">Опис</div>
+          <div class="blockText">{{ room()!.title || 'Опис буде додано' }}</div>
+        </div>
+
+        <div class="block">
+          <div class="blockTitle">Детальна інформація</div>
+          <div class="blockText">{{ room()!.description || 'Детальна інформація буде додана' }}</div>
+        </div>
+
+        @if (room()!.view.length > 0) {
+          <div class="block">
+            <div class="blockTitle">Вид з вікна</div>
+
+            <div class="tags">
+              @for (v of room()!.view; track v) {
+                <div class="tag">
+                  <i class="pi pi-eye"></i>
+                  <span>{{ v }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if ((room()!.comfort.length) > 0) {
+          <div class="block">
+            <div class="blockTitle">Зручності</div>
+
+            <div class="tags">
+              @for (c of room()!.comfort; track c) {
+                <div class="tag">
+                  <i class="pi pi-check"></i>
+                  <span>{{ c }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="actions">
+          <button pButton class="btnBook" type="button" icon="pi pi-calendar-plus" label="Забронювати" (click)="openBooking()"></button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<p-dialog
+  header="Заявка на бронювання"
+  [visible]="bookingVisible()"
+  (onHide)="closeBooking()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [closable]="true"
+  [closeOnEscape]="true"
+  [style]="{width: '520px'}"
+  class="bookingDialog"
+>
+  <form [formGroup]="bookingForm" class="bookingForm" (ngSubmit)="submitBooking()">
+    <div class="row2">
+      <div class="field">
+        <label>Ім'я</label>
+        <input pInputText formControlName="firstName" autocomplete="given-name" />
+      </div>
+
+      <div class="field">
+        <label>Прізвище</label>
+        <input pInputText formControlName="lastName" autocomplete="family-name" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>По батькові</label>
+      <input pInputText formControlName="patronymic" autocomplete="additional-name" />
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Телефон</label>
+        <input pInputText type="tel" formControlName="phoneNumber" autocomplete="tel" />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input pInputText type="email" formControlName="email" autocomplete="email" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Побажання</label>
+      <textarea pTextarea rows="3" formControlName="additionalWishes"></textarea>
+    </div>
+
+    <button
+      pButton
+      type="submit"
+      label="Надіслати заявку"
+      icon="pi pi-send"
+      class="btnBook"
+      [loading]="loadingBooking()"
+      [disabled]="loadingBooking()"
+    ></button>
+  </form>
+</p-dialog>

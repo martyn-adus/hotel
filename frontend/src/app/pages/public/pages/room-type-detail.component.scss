@@ -1,0 +1,495 @@
+:host {
+  --gold-1: #d7c19b;
+  --gold-2: #b99663;
+
+  --cream-1: #fbf7f0;
+  --cream-2: #f3ede3;
+  --cream-3: #e9dfd2;
+
+  --ink-1: #1b1b18;
+  --ink-2: rgba(27, 27, 24, 0.72);
+  --ink-3: rgba(27, 27, 24, 0.55);
+
+  --radius-xl: 30px;
+  --radius-lg: 26px;
+  --radius-md: 18px;
+
+  --shadow-1: 0 18px 45px rgba(0, 0, 0, 0.14);
+  --shadow-2: 0 30px 90px rgba(0, 0, 0, 0.18);
+}
+
+/* PAGE */
+.detail {
+  padding: 18px;
+  color: var(--ink-1);
+  min-height: 100vh;
+  background:
+    radial-gradient(1600px 800px at 50% -10%, rgba(215, 193, 155, 0.30), transparent 62%),
+    linear-gradient(180deg, #f6f2eb 0%, #efe7db 100%);
+}
+
+.topBar {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Back button */
+:host ::ng-deep .btnBack.p-button {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  color: var(--ink-1);
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(8px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+:host ::ng-deep .btnBack.p-button:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+}
+
+:host ::ng-deep .btnBack.p-button:active {
+  transform: translateY(0);
+}
+
+/* LAYOUT */
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 16px;
+  align-items: start;
+
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.gallery,
+.info {
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.52));
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+/* GALLERY */
+.heroImg {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+
+  background-size: cover;
+  background-position: center;
+  background-color: var(--cream-3);
+}
+
+.heroImg.ph {
+  background:
+    radial-gradient(900px 320px at 40% 40%, rgba(215, 193, 155, 0.28), transparent 55%),
+    var(--cream-3);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 380px at 20% 15%, rgba(215, 193, 155, 0.20), transparent 55%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.35) 85%);
+  pointer-events: none;
+}
+
+.heroImg::before {
+  content: "";
+  position: absolute;
+  inset: -80px;
+  background: radial-gradient(700px 220px at 30% 20%, rgba(255, 255, 255, 0.14), transparent 60%);
+  transform: rotate(-6deg);
+  pointer-events: none;
+}
+
+.phInner {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  gap: 8px;
+}
+
+.heroMeta {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.heroPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+
+  background: rgba(27, 27, 24, 0.82);
+  color: #fff;
+
+  font-weight: 900;
+  font-size: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.heroPill.light {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  flex-wrap: wrap;
+
+  background: rgba(255, 255, 255, 0.35);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.thumb {
+  width: 118px;
+  height: 78px;
+  border-radius: 18px;
+
+  background-size: cover;
+  background-position: center;
+  background-color: #fff;
+
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  cursor: pointer;
+
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+  filter: saturate(1.02);
+
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+}
+
+.thumb:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+  border-color: rgba(185, 150, 99, 0.35);
+}
+
+.thumb.active {
+  border-color: rgba(185, 150, 99, 0.65);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+  outline: 3px solid rgba(215, 193, 155, 0.25);
+}
+
+/* INFO */
+.info {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 901px) {
+  .info {
+    position: sticky;
+    top: 16px;
+  }
+}
+
+.pill {
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(27, 27, 24, 0.80);
+  color: #fff;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.h1 {
+  font-size: 34px;
+  font-weight: 1000;
+  letter-spacing: -0.35px;
+  line-height: 1.05;
+  margin-top: 2px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.fact {
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.k {
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.v {
+  margin-top: 4px;
+  font-weight: 1000;
+  font-size: 15px;
+}
+
+.block {
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.blockTitle {
+  font-weight: 1000;
+  letter-spacing: -0.2px;
+}
+
+.blockText {
+  margin-top: 8px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.actions {
+  margin-top: 2px;
+}
+
+/* Primary action button (book) */
+:host ::ng-deep .btnBook.p-button {
+  width: 100%;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #1b1b18;
+  font-weight: 1000;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+:host ::ng-deep .btnBook.p-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.18),
+    0 0 0 3px rgba(215, 193, 155, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+:host ::ng-deep .btnBook.p-button:active {
+  transform: translateY(0);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.16),
+    inset 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* TAGS */
+.tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, rgba(215, 193, 155, 0.55), rgba(185, 150, 99, 0.25));
+  border: 1px solid rgba(185, 150, 99, 0.25);
+
+  font-size: 13px;
+  font-weight: 900;
+  color: #3a2e1e;
+
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.tag i {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* EMPTY STATE */
+.empty {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-2);
+  padding: 18px;
+}
+
+.empty .title {
+  font-weight: 1000;
+  font-size: 18px;
+}
+
+.empty .sub {
+  margin-top: 6px;
+  color: var(--ink-2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImg {
+    aspect-ratio: 16 / 11;
+  }
+
+  .thumb {
+    width: 106px;
+    height: 70px;
+  }
+
+  .h1 {
+    font-size: 30px;
+  }
+}
+
+/* ===== Booking Dialog (lux) ===== */
+:host ::ng-deep .bookingDialog.p-dialog {
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  box-shadow: var(--shadow-2);
+}
+
+/* overlay/mask */
+:host ::ng-deep .p-dialog-mask {
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(2px);
+}
+
+/* Header */
+:host ::ng-deep .bookingDialog .p-dialog-header {
+  background: linear-gradient(180deg, var(--cream-1), rgba(251, 247, 240, 0.92));
+  color: var(--ink-1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 18px 20px;
+
+  font-weight: 1000;
+  letter-spacing: -0.2px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Content */
+:host ::ng-deep .bookingDialog .p-dialog-content {
+  background:
+    radial-gradient(900px 320px at 15% 0%, rgba(215, 193, 155, 0.28), transparent 60%),
+    linear-gradient(180deg, var(--cream-2), rgba(251, 247, 240, 0.92));
+  color: var(--ink-1);
+  padding: 16px 20px 20px;
+}
+
+/* Close icon */
+:host ::ng-deep .bookingDialog .p-dialog-header-icon {
+  color: var(--ink-2);
+}
+
+:host ::ng-deep .bookingDialog .p-dialog-header-icon:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Form layout */
+.bookingForm {
+  display: grid;
+  gap: 14px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 1000;
+  font-size: 12px;
+  color: var(--ink-2);
+  letter-spacing: 0.15px;
+}
+
+/* Prime inputs in dialog */
+:host ::ng-deep .bookingDialog .p-inputtext,
+:host ::ng-deep .bookingDialog textarea.p-inputtextarea {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink-1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  padding: 10px 12px;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+:host ::ng-deep .bookingDialog .p-inputtext:hover,
+:host ::ng-deep .bookingDialog textarea.p-inputtextarea:hover {
+  border-color: rgba(185, 150, 99, 0.35);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+:host ::ng-deep .bookingDialog .p-inputtext:focus,
+:host ::ng-deep .bookingDialog textarea.p-inputtextarea:focus {
+  outline: none;
+  border-color: rgba(185, 150, 99, 0.55);
+  box-shadow:
+    0 0 0 4px rgba(215, 193, 155, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  background: rgba(255,  255, 255, 0.78);
+}
+
+/* Submit button tweaks in dialog */
+:host ::ng-deep .bookingDialog .btnBook.p-button {
+  margin-top: 4px;
+  height: 46px;
+  border-radius: 18px;
+}
+
+/* small screens dialog */
+@media (max-width: 600px) {
+  :host ::ng-deep .bookingDialog.p-dialog {
+    width: 94vw !important;
+    margin: 0 auto;
+  }
+
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,62 +1,95 @@
-import { Injectable, signal } from '@angular/core';
-import { Room } from './room.model';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { tap, finalize } from 'rxjs/operators';
 
-const KEY = 'hotel_rooms_v1';
-
-function uid() {
-  return Math.random().toString(16).slice(2) + Date.now().toString(16);
+export interface RoomType {
+  id: string;
+  type: string;
+  title: string;
+  capacity: number;
+  pricePerNight: number;
+  description?: string;
+  mediaUrls: string[];
+  view: string[];
+  comfort: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-const seed: Room[] = [
-  {
-    id: 'r1',
-    title: 'Deluxe 201',
-    type: 'Deluxe',
-    pricePerNight: 2200,
-    description: 'Світлий номер з великим ліжком, балконом та видом на місто.',
-    status: 'ACTIVE',
-    photos: [],
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'r2',
-    title: 'Lux 301',
-    type: 'Lux',
-    pricePerNight: 3500,
-    description: 'Преміум люкс з зоною відпочинку та ванною кімнатою.',
-    status: 'ACTIVE',
-    photos: [],
-    updatedAt: new Date().toISOString(),
-  },
-];
+export interface CreateRoomTypeDto {
+  type: string;
+  title: string;
+  capacity: number;
+  pricePerNight: number;
+  description?: string;
+  mediaUrls?: string[];
+  view?: string[];
+  comfort?: string[];
+}
+
+export interface UpdateRoomTypeDto {
+  type?: string;
+  title?: string;
+  capacity?: number;
+  pricePerNight?: number;
+  description?: string;
+  mediaUrls?: string[];
+  view?: string[];
+  comfort?: string[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class RoomsService {
-  rooms = signal<Room[]>(this.load());
+  private http = inject(HttpClient);
+  private readonly endpoint = '/api/room-types';
 
-  private load(): Room[] {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as Room[];
-    localStorage.setItem(KEY, JSON.stringify(seed));
-    return seed;
+  rooms = signal<RoomType[]>([]);
+  loading = signal(false);
+
+  loadAll() {
+    this.loading.set(true);
+    return this.http.get<any[]>(this.endpoint).pipe(
+      tap((list) => this.rooms.set((list ?? []).map((x) => this.fromApi(x)))),
+      finalize(() => this.loading.set(false)),
+    );
   }
 
-  private save(next: Room[]) {
-    localStorage.setItem(KEY, JSON.stringify(next));
-    this.rooms.set(next);
+  create(payload: CreateRoomTypeDto) {
+    return this.http.post<any>(this.endpoint, payload).pipe(
+      tap((created) => this.rooms.set([this.fromApi(created), ...this.rooms()])),
+    );
   }
 
-  create(partial: Omit<Room, 'id' | 'updatedAt'>) {
-    const next: Room = { ...partial, id: uid(), updatedAt: new Date().toISOString() };
-    this.save([next, ...this.rooms()]);
-  }
-
-  update(id: string, patch: Partial<Omit<Room, 'id'>>) {
-    const next = this.rooms().map(r => r.id === id ? { ...r, ...patch, updatedAt: new Date().toISOString() } : r);
-    this.save(next);
+  update(id: string, payload: UpdateRoomTypeDto) {
+    return this.http.patch<any>(`${this.endpoint}/${id}`, payload).pipe(
+      tap((updated) => {
+        const u = this.fromApi(updated);
+        this.rooms.set(this.rooms().map((r) => (r.id === id ? u : r)));
+      }),
+    );
   }
 
   remove(id: string) {
-    this.save(this.rooms().filter(r => r.id !== id));
+    return this.http.delete<void>(`${this.endpoint}/${id}`).pipe(
+      tap(() => this.rooms.set(this.rooms().filter((r) => r.id !== id))),
+    );
   }
+
+  private fromApi(x: any): RoomType {
+    return {
+      id: x.id ?? x._id,
+      type: x.type ?? x._type ?? '',
+      title: x.title ?? x._title ?? '',
+      capacity: x.capacity ?? x._capacity ?? 1,
+      pricePerNight: Number(x.pricePerNight ?? x._pricePerNight ?? 0),
+      description: x.description ?? x._description ?? '',
+      mediaUrls: x.mediaUrls ?? x._mediaUrls ?? [],
+      view: x.view ?? x._view ?? [],
+      comfort: x.comfort ?? x._comfort ?? [],
+      createdAt: x.createdAt ?? x._createdAt,
+      updatedAt: x.updatedAt ?? x._updatedAt,
+    };
+  }
+
+
 }

@@ -19,6 +19,8 @@ FROM deps AS build
 COPY . .
 RUN npm run prisma:generate
 RUN npm run build
+# Compile seed script
+RUN npx tsc prisma/seed.ts --outDir dist/prisma --esModuleInterop --resolveJsonModule --skipLibCheck
 
 FROM base AS runner
 COPY --from=deps-prod /app/node_modules ./node_modules
