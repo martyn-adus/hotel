@@ -10,7 +10,6 @@ export class CreateBookingRequestDto {
   lastName: string;
 
   @IsString()
-  @IsNotEmpty()
   patronymic: string;
 
   @IsString()
