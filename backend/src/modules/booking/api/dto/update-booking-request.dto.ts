@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BookingRequestStatus } from '../../domain/booking-request.entity';
 
 export class UpdateBookingRequestDto {
@@ -21,6 +21,14 @@ export class UpdateBookingRequestDto {
   @IsEmail()
   @IsOptional()
   email?: string;
+
+  @IsDateString()
+  @IsOptional()
+  checkInDate?: string;
+
+  @IsDateString()
+  @IsOptional()
+  checkOutDate?: string;
 
   @IsString()
   @IsOptional()

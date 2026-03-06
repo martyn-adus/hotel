@@ -14,6 +14,8 @@ export class UpdateBookingRequestUseCase {
       patronymic?: string;
       phoneNumber?: string;
       email?: string;
+      checkInDate?: string;
+      checkOutDate?: string;
       additionalWishes?: string;
       status?: BookingRequestStatus;
       roomTypeId?: string;

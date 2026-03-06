@@ -50,6 +50,8 @@ model BookingRequest {
   patronymic       String
   phoneNumber      String
   email            String
+  checkInDate      DateTime?
+  checkOutDate     DateTime?
   additionalWishes String?
   status           BookingRequestStatus @default(pending)
   roomTypeId       String

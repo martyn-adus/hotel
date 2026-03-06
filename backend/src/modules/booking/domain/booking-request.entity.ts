@@ -14,6 +14,8 @@ export class BookingRequest extends BaseEntity {
   private _patronymic: string;
   private _phoneNumber: string;
   private _email: string;
+  private _checkInDate?: Date;
+  private _checkOutDate?: Date;
   private _additionalWishes?: string;
   private _status: BookingRequestStatus;
   private _roomTypeId: string;
@@ -40,6 +42,14 @@ export class BookingRequest extends BaseEntity {
 
   get email(): string {
     return this._email;
+  }
+
+  get checkInDate(): Date | undefined {
+    return this._checkInDate;
+  }
+
+  get checkOutDate(): Date | undefined {
+    return this._checkOutDate;
   }
 
   get additionalWishes(): string | undefined {
