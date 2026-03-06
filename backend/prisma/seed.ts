@@ -4,20 +4,36 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  const defaultEmail = 'admin@hotel.com';
-  const defaultPassword = 'admin123';
+  const defaultEmail = process.env.ADMIN_EMAIL;
+  const defaultPassword = process.env.ADMIN_PASSWORD;
 
-  // Check if default user already exists
+  if (!defaultEmail || !defaultPassword) {
+    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required');
+  }
+
   const existingUser = await prisma.user.findUnique({
     where: { email: defaultEmail },
   });
 
   if (existingUser) {
-    console.log('Default admin user already exists');
+    console.log('Admin user with this email already exists');
+    console.log('Updating password...');
+
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+    await prisma.user.update({
+      where: { email: defaultEmail },
+      data: { password: hashedPassword },
+    });
+
+    console.log('Admin password updated successfully');
+    console.log('Email:', defaultEmail);
     return;
   }
 
-  // Create default admin user
+  const deletedCount = await prisma.user.deleteMany({});
+  console.log(`Deleted ${deletedCount.count} existing user(s)`);
+
   const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
   const user = await prisma.user.create({
@@ -27,9 +43,8 @@ async function main() {
     },
   });
 
-  console.log('Default admin user created:');
+  console.log('Admin user created:');
   console.log('Email:', defaultEmail);
-  console.log('Password:', defaultPassword);
   console.log('User ID:', user.id);
 }
 

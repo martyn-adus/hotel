@@ -55,6 +55,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       MINIO_ENDPOINT: minio
       PORT: 3000
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     networks:
       - hotel-network
     command: sh -c "npx prisma migrate deploy && node dist/prisma/seed.js && node dist/src/main"
