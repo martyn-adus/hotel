@@ -7,51 +7,59 @@ import { GetBookingRequestsQueryDto } from '../api/dto/get-booking-requests-quer
 export class BookingRequestRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(filters?: GetBookingRequestsQueryDto): Promise<BookingRequest[]> {
+  async findAll(filters?: GetBookingRequestsQueryDto): Promise<{ data: BookingRequest[]; total: number }> {
     const usePagination = filters?.page !== undefined || filters?.limit !== undefined;
     const page = usePagination ? Math.max(filters?.page ?? 1, 1) : undefined;
     const limit = usePagination ? Math.min(Math.max(filters?.limit ?? 10, 1), 100) : undefined;
 
-    const bookings = await this.prisma.bookingRequest.findMany({
-      where: {
-        phoneNumber: filters?.mobileNumber
-          ? { contains: filters.mobileNumber, mode: 'insensitive' }
-          : undefined,
-        checkInDate:
-          filters?.checkInDateFrom || filters?.checkInDateTo
-            ? {
-                gte: filters.checkInDateFrom ? new Date(filters.checkInDateFrom) : undefined,
-                lte: filters.checkInDateTo ? new Date(filters.checkInDateTo) : undefined,
-              }
-            : undefined,
-        checkOutDate:
-          filters?.checkOutDateFrom || filters?.checkOutDateTo
-            ? {
-                gte: filters.checkOutDateFrom ? new Date(filters.checkOutDateFrom) : undefined,
-                lte: filters.checkOutDateTo ? new Date(filters.checkOutDateTo) : undefined,
-              }
-            : undefined,
-        roomType: filters?.roomTypeName
+    const where: any = {
+      phoneNumber: filters?.mobileNumber
+        ? { contains: filters.mobileNumber, mode: 'insensitive' }
+        : undefined,
+      checkInDate:
+        filters?.checkInDateFrom || filters?.checkInDateTo
           ? {
-              OR: [
-                { type: { contains: filters.roomTypeName, mode: 'insensitive' } },
-                { title: { contains: filters.roomTypeName, mode: 'insensitive' } },
-              ],
+              gte: filters.checkInDateFrom ? new Date(filters.checkInDateFrom) : undefined,
+              lte: filters.checkInDateTo ? new Date(filters.checkInDateTo) : undefined,
             }
           : undefined,
-        OR: filters?.search
-          ? [
-              { firstName: { contains: filters.search, mode: 'insensitive' } },
-              { lastName: { contains: filters.search, mode: 'insensitive' } },
-            ]
+      checkOutDate:
+        filters?.checkOutDateFrom || filters?.checkOutDateTo
+          ? {
+              gte: filters.checkOutDateFrom ? new Date(filters.checkOutDateFrom) : undefined,
+              lte: filters.checkOutDateTo ? new Date(filters.checkOutDateTo) : undefined,
+            }
           : undefined,
-      },
-      orderBy: { createdAt: 'desc' },
-      skip: page && limit ? (page - 1) * limit : undefined,
-      take: limit,
-    });
+      roomType: filters?.roomTypeName
+        ? {
+            OR: [
+              { type: { contains: filters.roomTypeName, mode: 'insensitive' } },
+              { title: { contains: filters.roomTypeName, mode: 'insensitive' } },
+            ],
+          }
+        : undefined,
+      OR: filters?.search
+        ? [
+            { firstName: { contains: filters.search, mode: 'insensitive' } },
+            { lastName: { contains: filters.search, mode: 'insensitive' } },
+          ]
+        : undefined,
+    };
 
-    return bookings.map((booking) => this.toDomain(booking));
+    const [bookings, total] = await Promise.all([
+      this.prisma.bookingRequest.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: page && limit ? (page - 1) * limit : undefined,
+        take: limit,
+      }),
+      this.prisma.bookingRequest.count({ where }),
+    ]);
+
+    return {
+      data: bookings.map((booking) => this.toDomain(booking)),
+      total,
+    };
   }
 
   async findById(id: string): Promise<BookingRequest | null> {

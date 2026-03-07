@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -21,7 +21,7 @@ import {Router} from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private auth = inject(AuthService);
@@ -33,6 +33,13 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  ngOnInit(): void {
+    // If already authenticated, redirect to admin
+    if (this.auth.authed()) {
+      this.router.navigateByUrl('/admin/booking');
+    }
+  }
 
   async submit(): Promise<void> {
     this.error.set(null);
@@ -48,7 +55,7 @@ export class LoginComponent {
 
       await this.auth.login(email!, password!);
 
-      await this.router.navigateByUrl('/admin/rooms');
+      await this.router.navigateByUrl('/admin/booking');
     } catch {
       this.error.set('Невірний логін або пароль.');
     } finally {

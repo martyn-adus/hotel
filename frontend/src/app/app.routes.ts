@@ -19,7 +19,7 @@ export const routes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'rooms' },
+      { path: '', pathMatch: 'full', redirectTo: 'booking' },
       { path: 'rooms', component: RoomsPageComponent },
       { path: 'booking', component: AdminBookingPage }
     ],

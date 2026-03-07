@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, finalize } from 'rxjs/operators';
+import { tap, finalize, map } from 'rxjs/operators';
 
 export interface RoomType {
   id: string;
@@ -51,6 +51,12 @@ export class RoomsService {
     return this.http.get<any[]>(this.endpoint).pipe(
       tap((list) => this.rooms.set((list ?? []).map((x) => this.fromApi(x)))),
       finalize(() => this.loading.set(false)),
+    );
+  }
+
+  getById(id: string) {
+    return this.http.get<any>(`${this.endpoint}/${id}`).pipe(
+      map((room) => this.fromApi(room)),
     );
   }
 

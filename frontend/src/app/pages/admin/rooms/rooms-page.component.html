@@ -74,6 +74,7 @@
     [modal]="true"
     [draggable]="false"
     [resizable]="false"
+    [dismissableMask]="true"
     [style]="{ width: dialogWidth(), 'border-radius': '12px' }"
     [contentStyle]="{ overflow: 'auto' }"
     [breakpoints]="{ '900px': '94vh', '600px': '94vw' }"
@@ -101,17 +102,26 @@
       <section class="dlgForm">
         <div class="row2">
           <div class="field">
-            <label>Тип</label>
+            <label>Тип <span class="required">*</span></label>
             <input
               pInputText
               formControlName="type"
               placeholder="Введіть тип номеру"
               autocomplete="off"
             />
+            @if (form.controls.type.invalid && form.controls.type.touched) {
+              <small class="error">
+                @if (form.controls.type.hasError('required')) {
+                  Тип обов'язковий
+                } @else if (form.controls.type.hasError('minlength')) {
+                  Мінімум 2 символи
+                }
+              </small>
+            }
           </div>
 
           <div class="field">
-            <label>Ціна за ніч</label>
+            <label>Ціна за ніч <span class="required">*</span></label>
             <div class="money">
               <p-inputNumber
                 formControlName="pricePerNight"
@@ -121,23 +131,50 @@
               ></p-inputNumber>
               <span class="suffix">грн</span>
             </div>
+            @if (form.controls.pricePerNight.invalid && form.controls.pricePerNight.touched) {
+              <small class="error">
+                @if (form.controls.pricePerNight.hasError('required')) {
+                  Ціна обов'язкова
+                } @else if (form.controls.pricePerNight.hasError('min')) {
+                  Ціна не може бути меншою 0
+                }
+              </small>
+            }
           </div>
         </div>
 
         <div class="field">
-          <label>Опис</label>
+          <label>Опис <span class="required">*</span></label>
           <input pInputText formControlName="title" placeholder="Напр. Двомісний Deluxe з балконом" autocomplete="off" />
+          @if (form.controls.title.invalid && form.controls.title.touched) {
+            <small class="error">
+              @if (form.controls.title.hasError('required')) {
+                Опис обов'язковий
+              } @else if (form.controls.title.hasError('minlength')) {
+                Мінімум 3 символи
+              }
+            </small>
+          }
         </div>
 
         <div class="row2">
           <div class="field">
-            <label>Місткість</label>
+            <label>Місткість <span class="required">*</span></label>
             <p-inputNumber
               formControlName="capacity"
               [min]="1"
               [useGrouping]="false"
               inputId="capacity"
             ></p-inputNumber>
+            @if (form.controls.capacity.invalid && form.controls.capacity.touched) {
+              <small class="error">
+                @if (form.controls.capacity.hasError('required')) {
+                  Місткість обов'язкова
+                } @else if (form.controls.capacity.hasError('min')) {
+                  Мінімум 1 особа
+                }
+              </small>
+            }
           </div>
         </div>
         <div class="row2">
@@ -165,13 +202,22 @@
         </div>
 
         <div class="field">
-          <label>Детальна інформація</label>
+          <label>Детальна інформація <span class="required">*</span></label>
           <textarea
             pTextarea
             rows="4"
             formControlName="description"
             placeholder="Введіть опис номеру..."
           ></textarea>
+          @if (form.controls.description.invalid && form.controls.description.touched) {
+            <small class="error">
+              @if (form.controls.description.hasError('required')) {
+                Детальна інформація обов'язкова
+              } @else if (form.controls.description.hasError('minlength')) {
+                Мінімум 10 символів
+              }
+            </small>
+          }
         </div>
 
         <div class="photosBox">
@@ -289,7 +335,7 @@
           class="btn-save"
           icon="pi pi-check"
           [label]="mode() === 'create' ? 'Створити' : 'Зберегти'"
-          [disabled]="uploading()"
+          [disabled]="uploading() || form.invalid"
         ></button>
       </footer>
     </form>

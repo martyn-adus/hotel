@@ -22,3 +22,29 @@ body {
 :root{
   --p-textarea-background: var(--p-form-field-background);
 }
+
+/* Fix for dialog dismissableMask */
+.p-dialog-mask {
+  cursor: pointer !important;
+}
+
+.p-dialog {
+  cursor: default !important;
+}
+
+/* Textarea resize only vertical */
+textarea,
+.p-inputtextarea {
+  resize: vertical !important;
+}
+
+/* Fix dialog border-radius inheritance */
+.p-dialog .p-dialog-header {
+  border-top-left-radius: inherit !important;
+  border-top-right-radius: inherit !important;
+}
+
+.p-dialog .p-dialog-content {
+  border-bottom-left-radius: inherit !important;
+  border-bottom-right-radius: inherit !important;
+}

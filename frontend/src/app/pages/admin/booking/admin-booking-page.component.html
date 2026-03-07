@@ -7,45 +7,65 @@
     </div>
   </div>
 
+  <div class="filters">
+    <p-iconfield iconPosition="left">
+      <p-inputicon styleClass="pi pi-search" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Пошук за ім'ям"
+        (input)="onNameSearchChange($any($event.target).value)"
+      />
+    </p-iconfield>
+
+    <p-iconfield iconPosition="left">
+      <p-inputicon styleClass="pi pi-phone" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Пошук за телефоном"
+        (input)="onPhoneSearchChange($any($event.target).value)"
+      />
+    </p-iconfield>
+  </div>
+
   <div class="tableCard">
   <p-table
     [value]="bookings()"
     [loading]="loading()"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="10"
+    [totalRecords]="totalRecords()"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    (onLazyLoad)="onPageChange($event)"
     class="bookingTable"
-    [scrollable]="true"
-    [tableStyle]="{ width: '100%'}"
   >
 
     <ng-template pTemplate="header">
       <tr>
-        <th>Дата</th>
-        <th>Ім'я</th>
+        <th>Дата створення заявки</th>
+        <th>Ім'я та прізвище</th>
         <th>Телефон</th>
         <th>Email</th>
-        <th>Побажання</th>
         <th>Статус</th>
-        <th style="width:180px"></th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-b>
-      <tr>
+      <tr style="cursor: pointer;" (click)="openDetails(b)">
 
         <td>
           {{ b.createdAt | date:'dd.MM.yyyy HH:mm' }}
         </td>
 
         <td class="name">
-          {{ b.lastName }} {{ b.firstName }}
+          {{ b.firstName }} {{ b.lastName }}
         </td>
 
         <td>{{ b.phoneNumber }}</td>
 
         <td>{{ b.email }}</td>
-
-        <td class="wishes">
-          {{ b.additionalWishes || '—' }}
-        </td>
 
         <td>
 
@@ -72,36 +92,241 @@
 
         </td>
 
-        <td class="actionBtns">
-          @if (b.status === 'pending') {
-            <button
-              pButton
-              icon="pi pi-check"
-              class="p-button-success"
-              (click)="askConfirm($event, b.id)"
-            ></button>
-
-            <button
-              pButton
-              icon="pi pi-times"
-              class="p-button-danger"
-              (click)="askDecline($event, b.id)"
-            ></button>
-          }
-        </td>
-
       </tr>
     </ng-template>
 
   </p-table>
   </div>
 
-  <p-confirmDialog
-    key="bookingStatus"
-    styleClass="lux-confirm"
-    appendTo="body"
+  <p-dialog
+    header="Деталі заявки"
+    [(visible)]="detailsVisible"
+    (onHide)="closeDetails()"
+    [modal]="true"
+    [dismissableMask]="true"
     [closable]="true"
     [closeOnEscape]="true"
-    [dismissableMask]="true"
-  ></p-confirmDialog>
+    [draggable]="false"
+    [style]="{width: '700px'}"
+    styleClass="booking-details-dialog"
+  >
+    @if (selectedBooking(); as booking) {
+      @if (!editMode()) {
+        <div class="detailsContent">
+          <div class="detailRow">
+            <div class="detailLabel">Дата створення заявки:</div>
+            <div class="detailValue">{{ booking.createdAt | date:'dd.MM.yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="detailRow">
+            <div class="detailLabel">Ім'я:</div>
+            <div class="detailValue">{{ booking.firstName }}</div>
+          </div>
+
+          <div class="detailRow">
+            <div class="detailLabel">Прізвище:</div>
+            <div class="detailValue">{{ booking.lastName }}</div>
+          </div>
+
+          @if (booking.patronymic) {
+            <div class="detailRow">
+              <div class="detailLabel">По батькові:</div>
+              <div class="detailValue">{{ booking.patronymic }}</div>
+            </div>
+          }
+
+          <div class="detailRow">
+            <div class="detailLabel">Телефон:</div>
+            <div class="detailValue">{{ booking.phoneNumber }}</div>
+          </div>
+
+          <div class="detailRow">
+            <div class="detailLabel">Email:</div>
+            <div class="detailValue">{{ booking.email }}</div>
+          </div>
+
+          @if (selectedRoomType(); as roomType) {
+            <div class="detailRow">
+              <div class="detailLabel">Тип номеру:</div>
+              <div class="detailValue">{{ roomType.type }}</div>
+            </div>
+          }
+
+          @if (booking.checkInDate) {
+            <div class="detailRow">
+              <div class="detailLabel">Дата заїзду:</div>
+              <div class="detailValue">{{ booking.checkInDate | date:'dd.MM.yyyy' }}</div>
+            </div>
+          }
+
+          @if (booking.checkOutDate) {
+            <div class="detailRow">
+              <div class="detailLabel">Дата виїзду:</div>
+              <div class="detailValue">{{ booking.checkOutDate | date:'dd.MM.yyyy' }}</div>
+            </div>
+          }
+
+          @if (booking.additionalWishes) {
+            <div class="detailRow">
+              <div class="detailLabel">Побажання:</div>
+              <div class="detailValue">{{ booking.additionalWishes }}</div>
+            </div>
+          }
+
+          <div class="detailRow">
+            <div class="detailLabel">Статус:</div>
+            <div class="detailValue">
+              @if (booking.status === 'pending'){
+                <p-tag value="Очікує" severity="warn"></p-tag>
+              }
+              @if (booking.status === 'confirmed'){
+                <p-tag value="Підтверджено" severity="success"></p-tag>
+              }
+              @if (booking.status === 'declined'){
+                <p-tag value="Відхилено" severity="danger"></p-tag>
+              }
+            </div>
+          </div>
+
+          <div class="actionButtons">
+            <button
+              pButton
+              label="Редагувати"
+              icon="pi pi-pencil"
+              class="p-button-outlined"
+              (click)="startEdit()"
+            ></button>
+
+            @if (booking.status !== 'confirmed') {
+              <button
+                pButton
+                label="Підтвердити"
+                icon="pi pi-check"
+                class="p-button-success"
+                (click)="confirmBooking()"
+              ></button>
+            }
+
+            @if (booking.status !== 'declined') {
+              <button
+                pButton
+                label="Відхилити"
+                icon="pi pi-times"
+                class="p-button-danger"
+                (click)="declineBooking()"
+              ></button>
+            }
+          </div>
+        </div>
+      } @else {
+        <form [formGroup]="editForm" class="editForm" (ngSubmit)="saveEdit()">
+          <div class="row2">
+            <div class="field">
+              <label>Ім'я <span class="required">*</span></label>
+              <input pInputText formControlName="firstName" />
+              @if (editForm.controls.firstName.invalid && editForm.controls.firstName.touched) {
+                <small class="error">Ім'я обов'язкове</small>
+              }
+            </div>
+
+            <div class="field">
+              <label>Прізвище <span class="required">*</span></label>
+              <input pInputText formControlName="lastName" />
+              @if (editForm.controls.lastName.invalid && editForm.controls.lastName.touched) {
+                <small class="error">Прізвище обов'язкове</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label>По батькові</label>
+            <input pInputText formControlName="patronymic" />
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Телефон <span class="required">*</span></label>
+              <input pInputText formControlName="phoneNumber" />
+              @if (editForm.controls.phoneNumber.invalid && editForm.controls.phoneNumber.touched) {
+                <small class="error">Телефон обов'язковий</small>
+              }
+            </div>
+
+            <div class="field">
+              <label>Email <span class="required">*</span></label>
+              <input pInputText type="email" formControlName="email" />
+              @if (editForm.controls.email.invalid && editForm.controls.email.touched) {
+                <small class="error">
+                  @if (editForm.controls.email.hasError('required')) {
+                    Email обов'язковий
+                  } @else if (editForm.controls.email.hasError('email')) {
+                    Некоректний формат email
+                  }
+                </small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Тип номеру <span class="required">*</span></label>
+            <p-select
+              formControlName="roomTypeId"
+              [options]="roomTypes()"
+              optionLabel="type"
+              optionValue="id"
+              placeholder="Виберіть тип номеру"
+              [style]="{'width': '100%'}"
+            ></p-select>
+            @if (editForm.controls.roomTypeId.invalid && editForm.controls.roomTypeId.touched) {
+              <small class="error">Тип номеру обов'язковий</small>
+            }
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Дата заїзду <span class="required">*</span></label>
+              <input pInputText type="date" formControlName="checkInDate" />
+              @if (editForm.controls.checkInDate.invalid && editForm.controls.checkInDate.touched) {
+                <small class="error">Дата заїзду обов'язкова</small>
+              }
+            </div>
+
+            <div class="field">
+              <label>Дата виїзду <span class="required">*</span></label>
+              <input pInputText type="date" formControlName="checkOutDate" />
+              @if (editForm.controls.checkOutDate.invalid && editForm.controls.checkOutDate.touched) {
+                <small class="error">Дата виїзду обов'язкова</small>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Побажання</label>
+            <textarea pTextarea rows="3" formControlName="additionalWishes" class="p-textarea"></textarea>
+          </div>
+
+          <div class="actionButtons">
+            <button
+              pButton
+              type="button"
+              label="Скасувати"
+              icon="pi pi-times"
+              class="p-button-outlined"
+              (click)="cancelEdit()"
+            ></button>
+
+            <button
+              pButton
+              type="submit"
+              label="Зберегти"
+              icon="pi pi-check"
+              class="p-button-success"
+              [disabled]="editForm.invalid || saving()"
+              [loading]="saving()"
+            ></button>
+          </div>
+        </form>
+      }
+    }
+  </p-dialog>
 </div>

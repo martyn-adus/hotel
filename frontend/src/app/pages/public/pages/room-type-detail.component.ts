@@ -50,7 +50,7 @@ export class RoomTypeDetailComponent implements OnInit {
   private fb = inject(FormBuilder);
   private bookingSvc = inject(BookingService);
 
-  bookingVisible = signal(false);
+  bookingVisible = false;
   loadingBooking = signal(false);
 
   bookingForm = this.fb.group({
@@ -59,6 +59,8 @@ export class RoomTypeDetailComponent implements OnInit {
     patronymic: [''],
     phoneNumber: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
+    checkInDate: [this.getTodayDate(), Validators.required],
+    checkOutDate: [this.getTodayDate(), Validators.required],
     additionalWishes: ['']
   });
 
@@ -76,11 +78,11 @@ export class RoomTypeDetailComponent implements OnInit {
   }
 
   openBooking() {
-    this.bookingVisible.set(true);
+    this.bookingVisible = true;
   }
 
   closeBooking() {
-    this.bookingVisible.set(false);
+    this.bookingVisible = false;
     this.loadingBooking.set(false);
     this.bookingForm.reset();
   }
@@ -101,7 +103,7 @@ export class RoomTypeDetailComponent implements OnInit {
     this.bookingSvc.createBooking(payload).subscribe({
       next: () => {
         this.loadingBooking.set(false);
-        this.bookingVisible.set(false);
+        this.bookingVisible = false;
         this.bookingForm.reset();
       },
       error: () => {
@@ -118,5 +120,13 @@ export class RoomTypeDetailComponent implements OnInit {
 
   back() {
     this.router.navigate(['/']);
+  }
+
+  private getTodayDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

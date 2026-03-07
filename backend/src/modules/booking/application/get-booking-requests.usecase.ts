@@ -7,6 +7,12 @@ export class GetBookingRequestsUseCase {
   constructor(private readonly bookingRequestRepository: BookingRequestRepository) {}
 
   async execute(filters?: GetBookingRequestsQueryDto) {
-    return this.bookingRequestRepository.findAll(filters);
+    const result = await this.bookingRequestRepository.findAll(filters);
+    return {
+      data: result.data,
+      total: result.total,
+      page: filters?.page ?? 1,
+      limit: filters?.limit ?? 10,
+    };
   }
 }
