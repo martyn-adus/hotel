@@ -48,7 +48,6 @@ describe('BookingRequestController', () => {
     const payload = {
       firstName: 'John',
       lastName: 'Doe',
-      patronymic: 'Junior',
       phoneNumber: '+123456789',
       email: 'john@example.com',
       checkInDate: '2026-03-20',
