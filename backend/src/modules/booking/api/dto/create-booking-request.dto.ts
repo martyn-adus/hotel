@@ -17,6 +17,7 @@ export class CreateBookingRequestDto {
   phoneNumber: string;
 
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @IsDateString()
