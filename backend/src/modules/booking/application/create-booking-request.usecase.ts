@@ -9,9 +9,9 @@ export class CreateBookingRequestUseCase {
   async execute(data: {
     firstName: string;
     lastName: string;
-    patronymic: string;
+    patronymic?: string;
     phoneNumber: string;
-    email: string;
+    email?: string;
     checkInDate: string;
     checkOutDate: string;
     additionalWishes?: string;

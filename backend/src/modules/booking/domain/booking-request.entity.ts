@@ -11,9 +11,9 @@ export enum BookingRequestStatus {
 export class BookingRequest extends BaseEntity {
   private _firstName: string;
   private _lastName: string;
-  private _patronymic: string;
+  private _patronymic?: string;
   private _phoneNumber: string;
-  private _email: string;
+  private _email?: string;
   private _checkInDate?: Date;
   private _checkOutDate?: Date;
   private _additionalWishes?: string;
@@ -32,7 +32,7 @@ export class BookingRequest extends BaseEntity {
     return this._lastName;
   }
 
-  get patronymic(): string {
+  get patronymic(): string | undefined {
     return this._patronymic;
   }
 
@@ -40,7 +40,7 @@ export class BookingRequest extends BaseEntity {
     return this._phoneNumber;
   }
 
-  get email(): string {
+  get email(): string | undefined{
     return this._email;
   }
 

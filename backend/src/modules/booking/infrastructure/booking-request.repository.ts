@@ -77,9 +77,9 @@ export class BookingRequestRepository {
   async create(data: {
     firstName: string;
     lastName: string;
-    patronymic: string;
+    patronymic?: string;
     phoneNumber: string;
-    email: string;
+    email?: string;
     checkInDate: string;
     checkOutDate: string;
     additionalWishes?: string;
@@ -90,9 +90,9 @@ export class BookingRequestRepository {
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
-        patronymic: data.patronymic,
+        patronymic: data.patronymic ?? '',
         phoneNumber: data.phoneNumber,
-        email: data.email,
+        email: data.email ?? '',
         checkInDate: new Date(data.checkInDate),
         checkOutDate: new Date(data.checkOutDate),
         additionalWishes: data.additionalWishes,

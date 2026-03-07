@@ -56,12 +56,12 @@ export class RoomTypeDetailComponent implements OnInit {
   bookingForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    patronymic: [''],
+    patronymic: [null],
     phoneNumber: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    email: [null, [Validators.email]],
     checkInDate: [this.getTodayDate(), Validators.required],
     checkOutDate: [this.getTodayDate(), Validators.required],
-    additionalWishes: ['']
+    additionalWishes: [null]
   });
 
   constructor() {

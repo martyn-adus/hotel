@@ -156,13 +156,11 @@
       </div>
 
       <div class="field">
-        <label>Email <span class="required">*</span></label>
+        <label>Email</label>
         <input pInputText type="email" formControlName="email" autocomplete="email" />
         @if (bookingForm.controls.email.invalid && bookingForm.controls.email.touched) {
           <small class="error">
-            @if (bookingForm.controls.email.hasError('required')) {
-              Email обов'язковий
-            } @else if (bookingForm.controls.email.hasError('email')) {
+            @if (bookingForm.controls.email.hasError('email')) {
               Некоректний формат email
             }
           </small>
