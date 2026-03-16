@@ -1,7 +1,9 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpInterceptorFn } from '@angular/common/http';
+import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
 import { AuthService } from './auth.service';
+import {Router} from '@angular/router';
+import {catchError, throwError} from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const platformId = inject(PLATFORM_ID);
@@ -13,12 +15,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (!isApiCall || isLoginCall) return next(req);
 
   const auth = inject(AuthService);
-  const token = auth.token();
-  if (!token) return next(req);
+  const router = inject(Router);
 
-  return next(
-    req.clone({
+  const token = auth.token();
+
+  const request = token
+    ? req.clone({
       setHeaders: { Authorization: `Bearer ${token}` },
-    }),
+    }) : req;
+
+  return next(request).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        auth.logout();
+        router.navigateByUrl('/login');
+      }
+      return throwError(()=> error);
+    })
   );
 };
