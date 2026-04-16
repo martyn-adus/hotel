@@ -52,6 +52,7 @@ model BookingRequest {
   email            String
   checkInDate      DateTime?
   checkOutDate     DateTime?
+  fixPrice         Decimal? @db.Decimal(10, 2)
   additionalWishes String?
   status           BookingRequestStatus @default(pending)
   roomTypeId       String

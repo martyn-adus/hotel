@@ -82,6 +82,7 @@ export class BookingRequestRepository {
     email?: string;
     checkInDate: string;
     checkOutDate: string;
+    fixPrice: number;
     additionalWishes?: string;
     status?: BookingRequestStatus;
     roomTypeId: string;
@@ -95,6 +96,7 @@ export class BookingRequestRepository {
         email: data.email ?? '',
         checkInDate: new Date(data.checkInDate),
         checkOutDate: new Date(data.checkOutDate),
+        fixPrice: data.fixPrice,
         additionalWishes: data.additionalWishes,
         status: data.status ?? BookingRequestStatus.Pending,
         roomTypeId: data.roomTypeId,
@@ -134,18 +136,23 @@ export class BookingRequestRepository {
 
   private toDomain(prismaBooking: any): BookingRequest {
     return Object.assign(
-      new BookingRequest(prismaBooking.id, prismaBooking.createdAt, prismaBooking.updatedAt),
+      new BookingRequest(
+        prismaBooking.id,
+        prismaBooking.createdAt,
+        prismaBooking.updatedAt,
+      ),
       {
-      _firstName: prismaBooking.firstName,
-      _lastName: prismaBooking.lastName,
-      _patronymic: prismaBooking.patronymic,
-      _phoneNumber: prismaBooking.phoneNumber,
-      _email: prismaBooking.email,
-      _checkInDate: prismaBooking.checkInDate ?? undefined,
-      _checkOutDate: prismaBooking.checkOutDate ?? undefined,
-      _additionalWishes: prismaBooking.additionalWishes,
-      _status: prismaBooking.status,
-      _roomTypeId: prismaBooking.roomTypeId,
+        _firstName: prismaBooking.firstName,
+        _lastName: prismaBooking.lastName,
+        _patronymic: prismaBooking.patronymic,
+        _phoneNumber: prismaBooking.phoneNumber,
+        _email: prismaBooking.email,
+        _checkInDate: prismaBooking.checkInDate ?? undefined,
+        _checkOutDate: prismaBooking.checkOutDate ?? undefined,
+        _additionalWishes: prismaBooking.additionalWishes,
+        _status: prismaBooking.status,
+        _roomTypeId: prismaBooking.roomTypeId,
+        _fixPrice: prismaBooking.fixPrice != null ? Number(prismaBooking.fixPrice) : undefined,
       },
     );
   }

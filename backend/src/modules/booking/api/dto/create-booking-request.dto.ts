@@ -1,4 +1,12 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
 
 export class CreateBookingRequestDto {
   @IsString()
@@ -33,4 +41,8 @@ export class CreateBookingRequestDto {
   @IsString()
   @IsOptional()
   additionalWishes?: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  fixPrice: number;
 }

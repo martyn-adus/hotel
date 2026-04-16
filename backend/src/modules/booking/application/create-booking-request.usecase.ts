@@ -14,6 +14,7 @@ export class CreateBookingRequestUseCase {
     email?: string;
     checkInDate: string;
     checkOutDate: string;
+    fixPrice: number;
     additionalWishes?: string;
     status?: BookingRequestStatus;
     roomTypeId: string;

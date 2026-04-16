@@ -17,6 +17,7 @@ export interface BookingRequest {
   additionalWishes?: string;
   status: string;
   roomTypeId: string;
+  fixPrice?: number;
   createdAt: string;
 }
 
@@ -96,6 +97,7 @@ export class BookingService {
       status: (x.status ?? x._status ?? 'pending') as BookingStatus,
 
       roomTypeId: x.roomTypeId ?? x._roomTypeId ?? '',
+      fixPrice: x.fixPrice != null ? Number(x.fixPrice) : x._fixPrice != null ? Number(x._fixPrice) : undefined,
       createdAt: x.createdAt ?? x._createdAt ?? '',
     };
   }

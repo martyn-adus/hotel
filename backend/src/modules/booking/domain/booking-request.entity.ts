@@ -19,6 +19,7 @@ export class BookingRequest extends BaseEntity {
   private _additionalWishes?: string;
   private _status: BookingRequestStatus;
   private _roomTypeId: string;
+  private _fixPrice?: number;
 
   constructor(id: UUID, createdAt: Date, updatedAt: Date) {
     super(id, createdAt, updatedAt);
@@ -40,7 +41,7 @@ export class BookingRequest extends BaseEntity {
     return this._phoneNumber;
   }
 
-  get email(): string | undefined{
+  get email(): string | undefined {
     return this._email;
   }
 
@@ -62,5 +63,9 @@ export class BookingRequest extends BaseEntity {
 
   get roomTypeId(): string {
     return this._roomTypeId;
+  }
+
+  get fixPrice(): number | undefined {
+    return this._fixPrice;
   }
 }

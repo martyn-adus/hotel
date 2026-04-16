@@ -152,6 +152,13 @@
             </div>
           }
 
+          @if (booking.fixPrice != null) {
+            <div class="detailRow">
+              <div class="detailLabel">Зафіксована ціна:</div>
+              <div class="detailValue">{{ booking.fixPrice | number:'1.0-2' }} грн / ніч</div>
+            </div>
+          }
+
           @if (booking.checkInDate) {
             <div class="detailRow">
               <div class="detailLabel">Дата заїзду:</div>

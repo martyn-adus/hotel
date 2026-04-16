@@ -97,7 +97,8 @@ export class RoomTypeDetailComponent implements OnInit {
 
     const payload = {
       ...this.bookingForm.value,
-      roomTypeId: this.room()!.id
+      roomTypeId: this.room()!.id,
+      fixPrice: this.room()!.pricePerNight,
     };
 
     this.bookingSvc.createBooking(payload).subscribe({

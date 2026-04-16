@@ -52,6 +52,7 @@ describe('BookingRequestController', () => {
       email: 'john@example.com',
       checkInDate: '2026-03-20',
       checkOutDate: '2026-03-23',
+      fixPrice: 4200,
       roomTypeId: '5a6db0f9-2f19-45c1-9f1b-df3167777b6f',
       additionalWishes: 'Late check-in',
     };
@@ -74,7 +75,24 @@ describe('BookingRequestController', () => {
       email: 'john@example.com',
       checkInDate: '03-20-2026',
       checkOutDate: '2026-03-23',
+      fixPrice: 4200,
       roomTypeId: '5a6db0f9-2f19-45c1-9f1b-df3167777b6f',
+    };
+
+    await request(app.getHttpServer()).post('/booking-requests').send(payload).expect(400);
+    expect(createBookingRequestUseCase.execute).not.toHaveBeenCalled();
+  });
+
+  it('POST /booking-requests returns 400 when fixPrice is missing', async () => {
+    const payload = {
+      firstName: 'John',
+      lastName: 'Doe',
+      phoneNumber: '+123456789',
+      email: 'john@example.com',
+      checkInDate: '2026-03-20',
+      checkOutDate: '2026-03-23',
+      roomTypeId: '5a6db0f9-2f19-45c1-9f1b-df3167777b6f',
+      additionalWishes: 'Late check-in',
     };
 
     await request(app.getHttpServer()).post('/booking-requests').send(payload).expect(400);
